@@ -9,7 +9,7 @@ import {
   Redirect
 } from "react-router-dom";
 
-import { centerBox } from "./styles/positions";
+import { centerColumn } from "./styles/positions";
 
 import Home from "./views/Home";
 import Categories from "./views/Categories";
@@ -21,7 +21,8 @@ const appContainer = css`
   width: 80vw;
   max-width: 80rem;
   margin: auto;
-  ${centerBox}
+  ${centerColumn}
+  position: relative;
 `;
 
 function App() {

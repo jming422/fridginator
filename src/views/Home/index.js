@@ -33,20 +33,30 @@ const fridgeStyle = css`
   color: var(--white);
 `;
 
-function HomeCard({ title, customCss, icon }) {
+function HomeCard({ title, customCss, icon, linkTo }) {
   return (
-    <div css={[homeCardStyle, customCss]}>
+    <Link to={linkTo} css={[homeCardStyle, customCss]}>
       {icon && <FontAwesomeIcon icon={icon} />}
       <div css={{ margin: "0rem 2rem" }}>{title}</div>
-    </div>
+    </Link>
   );
 }
 
 function Home() {
   return (
     <>
-      <HomeCard title="Freezer" customCss={freezerStyle} icon={faSnowflake} />
-      <HomeCard title="Fridge" customCss={fridgeStyle} icon={faTint} />
+      <HomeCard
+        title="Freezer"
+        customCss={freezerStyle}
+        icon={faSnowflake}
+        linkTo="/view/freezer"
+      />
+      <HomeCard
+        title="Fridge"
+        customCss={fridgeStyle}
+        icon={faTint}
+        linkTo="/view/fridge"
+      />
       <Link to="/add">
         <FAB icon={faShoppingCart} />
       </Link>

@@ -36,3 +36,8 @@ body {
   color: var(--black);
   background-color: var(--bg-blue);
 }
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

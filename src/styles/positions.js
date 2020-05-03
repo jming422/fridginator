@@ -13,3 +13,9 @@ export const centerRow = css`
   justify-content: center;
   align-items: center;
 `;
+
+export const container = css`
+  height: 100%;
+  width: 100%;
+  ${centerColumn}
+`;

@@ -3,13 +3,12 @@
 
 import { jsx, css } from '@emotion/core';
 import React from 'react'; // eslint-disable-line
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTint, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { faSnowflake } from '@fortawesome/free-regular-svg-icons';
 
 import FAB from '../../components/FloatingActionButton';
-import { centerRow } from '../../styles/positions';
+import { centerRow, container } from '../../styles/positions';
 import { Link } from 'react-router-dom';
 
 const homeCardStyle = css`
@@ -36,21 +35,21 @@ const fridgeStyle = css`
 function HomeCard({ title, customCss, icon, linkTo }) {
   return (
     <Link to={linkTo} css={[homeCardStyle, customCss]}>
-      {icon && <FontAwesomeIcon icon={icon} />}
-      <div css={{ margin: '0rem 2rem' }}>{title}</div>
+      <FontAwesomeIcon icon={icon} />
+      <div css={{ marginLeft: '2rem' }}>{title}</div>
     </Link>
   );
 }
 
 function Home() {
   return (
-    <>
+    <div css={container}>
       <HomeCard title="Freezer" customCss={freezerStyle} icon={faSnowflake} linkTo="/view/freezer" />
       <HomeCard title="Fridge" customCss={fridgeStyle} icon={faTint} linkTo="/view/fridge" />
       <Link to="/add">
         <FAB icon={faShoppingCart} />
       </Link>
-    </>
+    </div>
   );
 }
 

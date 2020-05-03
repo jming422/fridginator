@@ -3,7 +3,11 @@
 import { jsx, css } from '@emotion/core';
 import { useRouteMatch, Redirect, Switch, Route } from 'react-router-dom';
 
+import { container } from '../../styles/positions';
 import Categories from './Categories';
+import SearchList from './SearchList';
+
+import { FREEZER_CATEGORIES, FRIDGE_CATEGORIES } from '../../utils/categories';
 
 function ViewSearch() {
   const match = useRouteMatch('/view/:place');
@@ -13,12 +17,16 @@ function ViewSearch() {
   }
 
   return (
-    <Switch>
-      <Route exact path={match.path}>
-        <Categories />
-      </Route>
-      <Route path={`${match.path}/:category`}></Route>
-    </Switch>
+    <div css={container}>
+      <Switch>
+        <Route exact path={match.path}>
+          <Categories />
+        </Route>
+        <Route path={`${match.path}/:category`}>
+          <SearchList />
+        </Route>
+      </Switch>
+    </div>
   );
 }
 

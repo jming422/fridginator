@@ -1,7 +1,6 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
-import React from 'react'; // eslint-disable-line
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -24,7 +23,7 @@ const fabStyle = css`
 
 function FAB({ icon = faPlus, onClick = () => {} }) {
   return (
-    <div css={fabStyle}>
+    <div css={fabStyle} onClick={onClick}>
       <FontAwesomeIcon icon={icon} />
     </div>
   );

@@ -1,7 +1,6 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
-import _ from 'lodash';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -14,13 +13,13 @@ const gridContainer = css`
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  margin: -3rem;
+  margin: -2rem;
 `;
 
 const cardStyle = css`
   height: 18rem;
   width: 30rem;
-  margin: 3rem;
+  margin: 2rem;
   border-radius: 1rem;
   background-color: var(--white);
   color: var(--blue);
@@ -48,6 +47,8 @@ function Categories() {
     case 'freezer':
       categories = FREEZER_CATEGORIES;
       break;
+    default:
+      categories = [];
   }
 
   return (

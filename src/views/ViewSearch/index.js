@@ -1,32 +1,39 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
-import { useRouteMatch, Redirect, Switch, Route } from 'react-router-dom';
+import { useRouteMatch, Redirect, Switch, Route, useLocation } from 'react-router-dom';
 
-import { container } from '../../styles/positions';
 import Categories from './Categories';
 import SearchList from './SearchList';
-
-import { FREEZER_CATEGORIES, FRIDGE_CATEGORIES } from '../../utils/categories';
+import SearchView from '../../components/SearchView';
 
 function ViewSearch() {
   const match = useRouteMatch('/view/:place');
   const place = match.params.place;
+
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const q = params.get('q');
+
   if (!['fridge', 'freezer'].includes(place)) {
     return <Redirect to="/" />;
   }
 
   return (
-    <div css={container}>
+    <SearchView q={q}>
       <Switch>
         <Route exact path={match.path}>
-          <Categories />
+          {q ? <SearchList q={q} place={place} /> : <Categories />}
         </Route>
-        <Route path={`${match.path}/:category`}>
-          <SearchList />
-        </Route>
+        <Route
+          path={`${match.path}/:category`}
+          render={(routeProps) => {
+            const category = routeProps.match.params.category;
+            return <SearchList q={q} place={place} category={category} />;
+          }}
+        />
       </Switch>
-    </div>
+    </SearchView>
   );
 }
 

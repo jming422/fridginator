@@ -1,20 +1,14 @@
 /** @jsx jsx */
 
-import { jsx, css } from "@emotion/core";
-import React from "react"; // eslint-disable-line
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect
-} from "react-router-dom";
+import { jsx, css } from '@emotion/core';
+import React from 'react'; // eslint-disable-line
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
-import { centerColumn } from "./styles/positions";
+import { centerColumn } from './styles/positions';
 
-import Home from "./views/Home";
-import Categories from "./views/Categories";
-import ViewSearch from "./views/ViewSearch";
-import AddSearch from "./views/AddSearch";
+import Home from './views/Home';
+import ViewSearch from './views/ViewSearch';
+import AddSearch from './views/AddSearch';
 
 const appContainer = css`
   height: 100vh;
@@ -32,9 +26,6 @@ function App() {
         <Switch>
           <Route exact path="/">
             <Home />
-          </Route>
-          <Route path="/categories">
-            <Categories />
           </Route>
           <Route path="/view">
             <ViewSearch />

@@ -1,10 +1,10 @@
 /** @jsx jsx */
 
-import { jsx, css } from "@emotion/core";
-import React from "react"; // eslint-disable-line
+import { jsx, css } from '@emotion/core';
+import React from 'react'; // eslint-disable-line
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const fabStyle = css`
   position: absolute;

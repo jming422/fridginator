@@ -1,4 +1,4 @@
-import { css, keyframes } from "@emotion/core";
+import { css, keyframes } from '@emotion/core';
 
 const pulsateKF = keyframes`
   0% {
@@ -59,16 +59,16 @@ const zoomKF = keyframes`
   }
 `;
 
-export const zoomPulseFrom = transformOrigin => css`
-  ${transformOrigin ? `transform-origin: ${transformOrigin};` : ""}
+export const zoomPulseFrom = (transformOrigin) => css`
+  ${transformOrigin ? `transform-origin: ${transformOrigin};` : ''}
   animation: ${zoomPulseKF} 128ms ease-in;
   animation-iteration-count: 1;
   scale: 1;
   opacity: 1;
 `;
 
-export const zoomFrom = transformOrigin => css`
-  ${transformOrigin ? `transform-origin: ${transformOrigin};` : ""}
+export const zoomFrom = (transformOrigin) => css`
+  ${transformOrigin ? `transform-origin: ${transformOrigin};` : ''}
   animation: ${zoomKF} 99ms ease-out;
   animation-iteration-count: 1;
   scale: 1;

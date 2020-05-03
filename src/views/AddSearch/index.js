@@ -1,6 +1,6 @@
 /** @jsx jsx */
 
-import { jsx, css } from "@emotion/core";
+import { jsx, css } from '@emotion/core';
 
 function AddSearch() {
   return <p>"add"</p>;

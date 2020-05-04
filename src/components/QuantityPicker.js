@@ -4,6 +4,7 @@ import { jsx, css } from '@emotion/core';
 import _ from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
 
 const pickerStyle = css`
   display: flex;
@@ -39,9 +40,11 @@ const inputStyle = css`
   font-size: 2rem;
 `;
 
-const throttledChangeFn = _.throttle((fn, val) => fn(val), 250);
+function QuantityPicker({ initial, customState, onChange = () => {} }) {
+  const builtinState = useState(initial);
 
-function QuantityPicker({ qty, setQty, onChange = () => {} }) {
+  const [qty, setQty] = customState || builtinState;
+
   return (
     <div css={pickerStyle}>
       <div
@@ -52,7 +55,7 @@ function QuantityPicker({ qty, setQty, onChange = () => {} }) {
             if (newVal <= 0) {
               return 0;
             }
-            throttledChangeFn(onChange, newVal);
+            onChange(newVal);
             return newVal;
           });
         }}
@@ -66,7 +69,7 @@ function QuantityPicker({ qty, setQty, onChange = () => {} }) {
         onClick={(e) => e.target.select()}
         onChange={(e) => {
           const newVal = e.target.value;
-          throttledChangeFn(onChange, newVal);
+          onChange(newVal);
           setQty(newVal);
         }}
       />
@@ -78,7 +81,7 @@ function QuantityPicker({ qty, setQty, onChange = () => {} }) {
             if (newVal <= 0) {
               return 0;
             }
-            throttledChangeFn(onChange, newVal);
+            onChange(newVal);
             return newVal;
           });
         }}

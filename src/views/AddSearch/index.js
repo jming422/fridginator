@@ -5,6 +5,7 @@ import { jsx, css } from '@emotion/core';
 import React, { useState, useContext } from 'react';
 import moment from 'moment/moment';
 import _ from 'lodash';
+import Fuse from 'fuse.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
@@ -14,25 +15,25 @@ import QuantityPicker from '../../components/QuantityPicker';
 import ListDivider from '../../components/ListDivider';
 import SearchView from '../../components/SearchView';
 
-import { ALL_CATEGORIES, isFridgeCategory, isFreezerCategory } from '../../utils/categories';
+import { ALL_CATEGORIES, isFridgeCategory, isFreezerCategory, idToName } from '../../utils/categories';
 
 const d2 = moment.duration(2, 'weeks');
 const d1 = moment.duration(1, 'week');
 const d = moment.duration(2, 'days');
 
 const things = [
-  { name: 'thing0', quantity: 12, category: 'Eggs & Dairy', location: 'Freezer', duration: d2 },
-  { name: 'thing1', quantity: 1, category: 'Eggs & Dairy', location: 'Freezer', duration: d1 },
-  { name: 'thing2', quantity: 2, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing3', quantity: 3, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing4', quantity: 4, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing5', quantity: 5, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing6', quantity: 6, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing7', quantity: 7, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing8', quantity: 8, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing9', quantity: 9, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing10', quantity: 10, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing11', quantity: 11, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
+  { id: 0, name: 'thing0', quantity: 12, category: 'eggs-dairy', location: 'fridge', duration: d2 },
+  { id: 1, name: 'thing1', quantity: 1, category: 'meats', location: 'fridge', duration: d1 },
+  { id: 2, name: 'thing2', quantity: 2, category: 'meats', location: 'freezer', duration: d },
+  { id: 3, name: 'thing3', quantity: 3, category: 'meats', location: 'freezer', duration: d },
+  { id: 4, name: 'thing4', quantity: 4, category: 'meats', location: 'freezer', duration: d },
+  { id: 5, name: 'thing5', quantity: 5, category: 'meats', location: 'freezer', duration: d },
+  { id: 6, name: 'thing6', quantity: 6, category: 'meats', location: 'freezer', duration: d },
+  { id: 7, name: 'thing7', quantity: 7, category: 'meats', location: 'freezer', duration: d },
+  { id: 8, name: 'thing8', quantity: 8, category: 'desserts', location: 'freezer', duration: d },
+  { id: 9, name: 'thing9', quantity: 9, category: 'meats', location: 'freezer', duration: d },
+  { id: 10, name: 'thing10', quantity: 10, category: 'drinks', location: 'fridge', duration: d },
+  { id: 11, name: 'thing11', quantity: 11, category: 'vegetables', location: 'fridge', duration: d },
 ];
 
 const listStyle = css`
@@ -133,7 +134,8 @@ function AddItem({ initial }) {
   const [name, setName] = useState(initial || '');
   const [category, setCategory] = useState('');
   const [location, setLocation] = useState('');
-  const [quantity, setQuantity] = useState(0);
+  const quantityState = useState(0);
+  const [quantity] = quantityState;
 
   return (
     <li css={listItemStyle()}>
@@ -174,7 +176,7 @@ function AddItem({ initial }) {
         <option value="fridge">Fridge</option>
         <option value="freezer">Freezer</option>
       </select>
-      <QuantityPicker qty={quantity} setQty={setQuantity} />
+      <QuantityPicker customState={quantityState} />
       <div css={addSaveStyle} onClick={() => addNewItem(name, category, location, quantity)}>
         Add
       </div>
@@ -185,8 +187,9 @@ function AddItem({ initial }) {
 function AddSearch() {
   const [q] = useContext(SearchContext);
 
+  //  const fuse = new Fuse(things);
+
   const [adding, setAdding] = useState(false);
-  const [qtys, setQtys] = useState(things.map(({ quantity }) => quantity));
 
   return (
     <>
@@ -201,27 +204,21 @@ function AddSearch() {
               <ListDivider />
             </>
           )}
-          {things.map((t, i) => {
+          {things.map((item, i) => {
             let status = 'normal';
-            if (t.duration.asWeeks() >= 2) status = 'red';
-            else if (t.duration.asWeeks() >= 1) status = 'orange';
+            if (item.duration.asWeeks() >= 2) status = 'red';
+            else if (item.duration.asWeeks() >= 1) status = 'orange';
 
             return (
               <li key={i} css={listItemStyle(status)}>
-                <div css={itemNameStyle}>{t.name}</div>
-                <div>{t.category}</div>
-                <div>
-                  {t.location} ({t.duration.humanize()})
+                <div css={itemNameStyle}>{item.name}</div>
+                <div>{idToName(item.category)}</div>
+                <div css={{ textTransform: 'capitalize' }}>
+                  {item.location} ({item.duration.humanize()})
                 </div>
                 <QuantityPicker
-                  qty={qtys[i]}
-                  setQty={(newQty) =>
-                    setQtys((oldQtys) => {
-                      const newQtys = _.clone(oldQtys);
-                      newQtys[i] = newQty;
-                      return newQtys;
-                    })
-                  }
+                  initial={item.quantity}
+                  onChange={(newVal) => console.log(`send to server ${newVal}`)}
                 />
               </li>
             );

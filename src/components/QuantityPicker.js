@@ -1,15 +1,16 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
-import { useState } from 'react';
 import _ from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
-import { centerRow } from '../styles/positions';
-
 const pickerStyle = css`
-  ${centerRow}
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 12%;
   height: 100%;
 `;
 
@@ -31,7 +32,6 @@ const minusIconStyle = css`
 
 const inputStyle = css`
   max-width: 2.2rem;
-  margin: 0rem 1rem;
   text-align: center;
   background: transparent;
   border: none;
@@ -41,15 +41,13 @@ const inputStyle = css`
 
 const throttledChangeFn = _.throttle((fn, val) => fn(val), 250);
 
-function QuantityPicker({ quantity, onChange = () => {} }) {
-  const [qtyState, setQtyState] = useState(quantity || 0);
-
+function QuantityPicker({ qty, setQty, onChange = () => {} }) {
   return (
     <div css={pickerStyle}>
       <div
         css={minusIconStyle}
         onClick={() => {
-          setQtyState((oldVal) => {
+          setQty((oldVal) => {
             const newVal = oldVal - 1;
             if (newVal <= 0) {
               return 0;
@@ -64,18 +62,18 @@ function QuantityPicker({ quantity, onChange = () => {} }) {
       <input
         type="text"
         css={inputStyle}
-        value={qtyState}
+        value={qty}
         onClick={(e) => e.target.select()}
         onChange={(e) => {
           const newVal = e.target.value;
           throttledChangeFn(onChange, newVal);
-          setQtyState(newVal);
+          setQty(newVal);
         }}
       />
       <div
         css={plusIconStyle}
         onClick={() => {
-          setQtyState((oldVal) => {
+          setQty((oldVal) => {
             const newVal = oldVal + 1;
             if (newVal <= 0) {
               return 0;

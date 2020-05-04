@@ -54,7 +54,7 @@ function Categories() {
   return (
     <div css={gridContainer}>
       {categories.map((c, i) => (
-        <Card key={i} icon={c.icon} title={c.name} linkTo={`${match.url}/${c.path}`} />
+        <Card key={i} icon={c.icon} title={c.name} linkTo={`${match.url}/${c.id}`} />
       ))}
     </div>
   );

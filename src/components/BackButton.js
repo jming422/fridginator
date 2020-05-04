@@ -10,9 +10,14 @@ import SearchContext from '../context/SearchContext';
 
 const btnStyle = css`
   position: absolute;
-  top: 2rem;
-  left: 0rem;
+  top: 1.5rem;
+  left: -1rem;
+  height: 4rem;
+  width: 4rem;
   font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   color: var(--blue);
 `;

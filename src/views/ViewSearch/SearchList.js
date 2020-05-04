@@ -1,8 +1,9 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
+import { useContext, useState } from 'react';
 import moment from 'moment/moment';
-import { useContext } from 'react';
+import _ from 'lodash';
 
 import SearchContext from '../../context/SearchContext';
 
@@ -31,6 +32,9 @@ const listStyle = css`
   height: 100%;
   width: 100%;
   margin-top: -2rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  padding: 0;
 `;
 
 const listItemStyle = (status) => {
@@ -70,6 +74,7 @@ const itemNameStyle = css`
 
 function SearchList({ place, category }) {
   const [q] = useContext(SearchContext);
+  const [qtys, setQtys] = useState(things.map(({ quantity }) => quantity));
 
   return (
     <ul css={listStyle}>
@@ -85,7 +90,16 @@ function SearchList({ place, category }) {
             <div>
               {t.location} ({t.duration.humanize()})
             </div>
-            <QuantityPicker quantity={t.quantity} />
+            <QuantityPicker
+              qty={qtys[i]}
+              setQty={(newQty) =>
+                setQtys((oldQtys) => {
+                  const newQtys = _.clone(oldQtys);
+                  newQtys[i] = newQty;
+                  return newQtys;
+                })
+              }
+            />
           </li>
         );
       })}

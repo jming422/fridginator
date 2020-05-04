@@ -16,9 +16,9 @@ const fabStyle = css`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   background-color: var(--dark-blue);
   color: var(--white);
-  cursor: pointer;
 `;
 
 function FAB({ icon = faPlus, onClick = () => {} }) {

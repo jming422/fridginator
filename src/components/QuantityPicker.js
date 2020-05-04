@@ -1,7 +1,6 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
-import _ from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';

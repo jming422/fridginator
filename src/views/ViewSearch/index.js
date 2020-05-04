@@ -1,6 +1,6 @@
 /** @jsx jsx */
 
-import { jsx, css } from '@emotion/core';
+import { jsx } from '@emotion/core';
 import { useRouteMatch, Redirect, Switch, Route } from 'react-router-dom';
 import { useContext } from 'react';
 

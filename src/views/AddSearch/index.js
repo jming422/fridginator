@@ -2,9 +2,8 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx, css } from '@emotion/core';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react'; // eslint-disable-line
 import moment from 'moment/moment';
-import _ from 'lodash';
 import Fuse from 'fuse.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';

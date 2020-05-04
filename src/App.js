@@ -6,7 +6,6 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 
 import { centerColumn } from './styles/positions';
 
-import BackButton from './components/BackButton';
 import Home from './views/Home';
 import ViewSearch from './views/ViewSearch';
 import AddSearch from './views/AddSearch';
@@ -29,7 +28,6 @@ function App() {
             <Home />
           </Route>
           <Route path="/view">
-            <BackButton />
             <ViewSearch />
           </Route>
           <Route path="/add">

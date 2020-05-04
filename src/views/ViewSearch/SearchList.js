@@ -2,6 +2,9 @@
 
 import { jsx, css } from '@emotion/core';
 import moment from 'moment/moment';
+import { useContext } from 'react';
+
+import SearchContext from '../../context/SearchContext';
 
 import QuantityPicker from '../../components/QuantityPicker';
 
@@ -65,7 +68,9 @@ const itemNameStyle = css`
   font-weight: bold;
 `;
 
-function SearchList({ q, place, category }) {
+function SearchList({ place, category }) {
+  const [q] = useContext(SearchContext);
+
   return (
     <ul css={listStyle}>
       {things.map((t, i) => {

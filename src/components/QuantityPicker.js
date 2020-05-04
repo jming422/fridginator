@@ -65,6 +65,7 @@ function QuantityPicker({ quantity, onChange = () => {} }) {
         type="text"
         css={inputStyle}
         value={qtyState}
+        onClick={(e) => e.target.select()}
         onChange={(e) => {
           const newVal = e.target.value;
           throttledChangeFn(onChange, newVal);

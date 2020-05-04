@@ -1,10 +1,12 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
-
+import { useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
+
+import SearchContext from '../context/SearchContext';
 
 const btnStyle = css`
   position: absolute;
@@ -17,10 +19,12 @@ const btnStyle = css`
 
 function BackButton({ customCss, onClick }) {
   const history = useHistory();
-  const location = useLocation();
+  const match = useRouteMatch({ path: '/view/:place/:category', exact: true });
+  const [q, setQ] = useContext(SearchContext);
 
   const smartGoBack = () => {
-    if (location.search && location.search !== '?q=') {
+    setQ('');
+    if (q && !match) {
       history.replace({ search: '' });
     } else {
       history.goBack();

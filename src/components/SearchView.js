@@ -1,14 +1,16 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
-import { useState } from 'react';
+import { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
 import qs from 'qs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
+import SearchContext from '../context/SearchContext';
+
 import { searchContainer } from '../styles/positions';
-import { useHistory } from 'react-router-dom';
 
 const searchBarStyle = css`
   width: 80%;
@@ -37,9 +39,9 @@ const throttledChangeFn = _.throttle((history, newValue) => {
   history.replace({ search: `?${qs.stringify({ q: newValue })}` });
 }, 250);
 
-function SearchView({ q, children }) {
-  const [value, setValue] = useState(q || '');
+function SearchView({ children }) {
   const history = useHistory();
+  const [q, setQ] = useContext(SearchContext);
 
   return (
     <div css={searchContainer}>
@@ -48,10 +50,10 @@ function SearchView({ q, children }) {
         <input
           type="text"
           css={searchInputStyle}
-          value={value}
+          value={q}
           onChange={(e) => {
             const newVal = e.target.value;
-            setValue(newVal);
+            setQ(newVal);
             throttledChangeFn(history, newVal);
           }}
         />

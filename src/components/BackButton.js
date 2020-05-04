@@ -24,14 +24,16 @@ const btnStyle = css`
 
 function BackButton({ customCss, onClick }) {
   const history = useHistory();
-  const match = useRouteMatch({ path: '/view/:place/:category', exact: true });
+  const match = useRouteMatch({ path: '/view/:place', exact: true });
   const [q, setQ] = useContext(SearchContext);
 
   const smartGoBack = () => {
-    setQ('');
-    if (q && !match) {
+    if (q && match) {
+      setQ('');
       history.replace({ search: '' });
     } else {
+      // This will trigger a POP event, and we already have a listener
+      // to clear q on POP events
       history.goBack();
     }
   };

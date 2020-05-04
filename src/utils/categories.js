@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import {
   faAppleAlt,
   faCarrot,
@@ -31,7 +33,10 @@ export const FREEZER_CATEGORIES = [
   { id: 'misc-ingredients', name: 'Misc. Ingredients', icon: faEllipsisH },
 ];
 
-export const ALL_CATEGORIES = FRIDGE_CATEGORIES.concat(FREEZER_CATEGORIES);
+export const ALL_CATEGORIES = _(FRIDGE_CATEGORIES)
+  .concat(FREEZER_CATEGORIES)
+  .uniqBy('id')
+  .value();
 
 export function isFridgeCategory(catId) {
   return FRIDGE_CATEGORIES.some(({ id }) => id === catId);

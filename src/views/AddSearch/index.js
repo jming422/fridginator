@@ -2,18 +2,17 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx, css } from '@emotion/core';
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
 import moment from 'moment/moment';
 import _ from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import BackButton from '../../components/BackButton';
+import SearchContext from '../../context/SearchContext';
+
 import QuantityPicker from '../../components/QuantityPicker';
 import ListDivider from '../../components/ListDivider';
 import SearchView from '../../components/SearchView';
-import SearchContext from '../../context/SearchContext';
 
 import { ALL_CATEGORIES, isFridgeCategory, isFreezerCategory } from '../../utils/categories';
 
@@ -100,7 +99,7 @@ const addBtnStyle = (adding) => css`
 
 const addInputStyle = css`
   ${itemNameStyle}
-  width: 15%;
+  width: 18%;
   background: transparent;
   border: none;
   font-size: 1.8rem;
@@ -114,6 +113,7 @@ const addSaveStyle = css`
   font-weight: bold;
   padding: 0.5rem 0.75rem;
   border-radius: 0.75rem;
+  cursor: pointer;
   color: var(--white);
   background-color: var(--blue);
 `;
@@ -122,6 +122,10 @@ function categoryShouldBeDisabled(category, location) {
   return (
     (location === 'fridge' && !isFridgeCategory(category)) || (location === 'freezer' && !isFreezerCategory(category))
   );
+}
+
+async function addNewItem(name, category, location, quantity) {
+  console.log('click!');
 }
 
 function AddItem({ initial }) {
@@ -170,21 +174,21 @@ function AddItem({ initial }) {
         <option value="freezer">Freezer</option>
       </select>
       <QuantityPicker qty={quantity} setQty={setQuantity} />
-      <div css={addSaveStyle}>Add</div>
+      <div css={addSaveStyle} onClick={() => addNewItem(name, category, location, quantity)}>
+        Add
+      </div>
     </li>
   );
 }
 
 function AddSearch() {
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const [q, setQ] = useState(params.get('q') || '');
+  const [q] = useContext(SearchContext);
+
   const [adding, setAdding] = useState(false);
   const [qtys, setQtys] = useState(things.map(({ quantity }) => quantity));
 
   return (
-    <SearchContext.Provider value={[q, setQ]}>
-      <BackButton />
+    <>
       <div css={addBtnStyle(adding)} onClick={() => setAdding((old) => !old)}>
         <FontAwesomeIcon icon={faPlus} />
       </div>
@@ -223,7 +227,7 @@ function AddSearch() {
           })}
         </ul>
       </SearchView>
-    </SearchContext.Provider>
+    </>
   );
 }
 

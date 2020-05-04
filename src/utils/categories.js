@@ -44,3 +44,7 @@ export function isFridgeCategory(catId) {
 export function isFreezerCategory(catId) {
   return FREEZER_CATEGORIES.some(({ id }) => id === catId);
 }
+
+export function idToName(categoryId) {
+  return ALL_CATEGORIES.find(({ id }) => id === categoryId).name;
+}

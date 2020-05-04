@@ -4,8 +4,10 @@ import { jsx, css } from '@emotion/core';
 import { useContext, useState } from 'react';
 import moment from 'moment/moment';
 import _ from 'lodash';
+import Fuse from 'fuse.js';
 
 import SearchContext from '../../context/SearchContext';
+import { idToName } from '../../utils/categories';
 
 import QuantityPicker from '../../components/QuantityPicker';
 
@@ -14,18 +16,18 @@ const d1 = moment.duration(1, 'week');
 const d = moment.duration(2, 'days');
 
 const things = [
-  { name: 'thing0', quantity: 12, category: 'Eggs & Dairy', location: 'Freezer', duration: d2 },
-  { name: 'thing1', quantity: 1, category: 'Eggs & Dairy', location: 'Freezer', duration: d1 },
-  { name: 'thing2', quantity: 2, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing3', quantity: 3, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing4', quantity: 4, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing5', quantity: 5, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing6', quantity: 6, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing7', quantity: 7, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing8', quantity: 8, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing9', quantity: 9, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing10', quantity: 10, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
-  { name: 'thing11', quantity: 11, category: 'Eggs & Dairy', location: 'Freezer', duration: d },
+  { name: 'thing0', quantity: 12, category: 'eggs-dairy', location: 'fridge', duration: d2 },
+  { name: 'thing1', quantity: 1, category: 'meats', location: 'fridge', duration: d1 },
+  { name: 'thing2', quantity: 2, category: 'meats', location: 'freezer', duration: d },
+  { name: 'thing3', quantity: 3, category: 'meats', location: 'freezer', duration: d },
+  { name: 'thing4', quantity: 4, category: 'meats', location: 'freezer', duration: d },
+  { name: 'thing5', quantity: 5, category: 'meats', location: 'freezer', duration: d },
+  { name: 'thing6', quantity: 6, category: 'meats', location: 'freezer', duration: d },
+  { name: 'thing7', quantity: 7, category: 'meats', location: 'freezer', duration: d },
+  { name: 'thing8', quantity: 8, category: 'desserts', location: 'freezer', duration: d },
+  { name: 'thing9', quantity: 9, category: 'meats', location: 'freezer', duration: d },
+  { name: 'thing10', quantity: 10, category: 'drinks', location: 'fridge', duration: d },
+  { name: 'thing11', quantity: 11, category: 'vegetables', location: 'fridge', duration: d },
 ];
 
 const listStyle = css`
@@ -76,19 +78,24 @@ function SearchList({ place, category }) {
   const [q] = useContext(SearchContext);
   const [qtys, setQtys] = useState(things.map(({ quantity }) => quantity));
 
+  const filteredThings = things.filter((t) => t.location === place && (!category || t.category === category));
+  const fuse = new Fuse(filteredThings, { keys: ['name'] });
+
+  const results = q ? fuse.search(q).map(({ item }) => item) : filteredThings;
+
   return (
     <ul css={listStyle}>
-      {things.map((t, i) => {
+      {results.map((item, i) => {
         let status = 'normal';
-        if (t.duration.asWeeks() >= 2) status = 'red';
-        else if (t.duration.asWeeks() >= 1) status = 'orange';
+        if (item.duration.asWeeks() >= 2) status = 'red';
+        else if (item.duration.asWeeks() >= 1) status = 'orange';
 
         return (
           <li key={i} css={listItemStyle(status)}>
-            <div css={itemNameStyle}>{t.name}</div>
-            <div>{t.category}</div>
-            <div>
-              {t.location} ({t.duration.humanize()})
+            <div css={itemNameStyle}>{item.name}</div>
+            <div>{idToName(item.category)}</div>
+            <div css={{ textTransform: 'capitalize' }}>
+              {item.location} ({item.duration.humanize()})
             </div>
             <QuantityPicker
               qty={qtys[i]}

@@ -1,12 +1,11 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
-import React, { useState, useContext, useEffect } from 'react'; // eslint-disable-line
+import React, { useState, useEffect } from 'react'; // eslint-disable-line
 import { BrowserRouter as Router, Switch, Route, Redirect, useHistory, useLocation } from 'react-router-dom';
 
 import SearchContext from './context/SearchContext';
 
-import { centerColumn } from './styles/positions';
 import BackButton from './components/BackButton';
 import Home from './views/Home';
 import ViewSearch from './views/ViewSearch';
@@ -16,8 +15,11 @@ const appContainer = css`
   height: 100vh;
   width: 80vw;
   max-width: 80rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   margin: auto;
-  ${centerColumn}
   position: relative;
 `;
 
@@ -31,7 +33,6 @@ function App() {
   useEffect(() => {
     const unlisten = history.listen((_0, action) => {
       if (action === 'POP') {
-        console.log('clearing q');
         setQ('');
       }
     });

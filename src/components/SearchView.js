@@ -10,7 +10,15 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 import SearchContext from '../context/SearchContext';
 
-import { searchContainer } from '../styles/positions';
+const searchContainer = css`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 2rem;
+`;
 
 const searchBarStyle = css`
   width: 80%;

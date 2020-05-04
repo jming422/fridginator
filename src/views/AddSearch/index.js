@@ -102,6 +102,7 @@ const addInputStyle = css`
   width: 18%;
   background: transparent;
   border: none;
+  border-bottom: 0.1rem solid var(--gray);
   font-size: 1.8rem;
 `;
 

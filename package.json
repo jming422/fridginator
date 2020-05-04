@@ -2,6 +2,20 @@
   "name": "fridginator",
   "version": "0.1.0",
   "private": true,
+  "description": "Keep track of what's in your fridge (and how long it's been there)",
+  "author": "Jonathan Ming",
+  "license": "GPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jming422/fridginator.git"
+  },
+  "main": "src/index.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
   "dependencies": {
     "@emotion/core": "^10.0.28",
     "@fortawesome/fontawesome-svg-core": "^1.2.28",
@@ -20,12 +34,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
+  "devDependencies": {},
   "eslintConfig": {
     "extends": "react-app"
   },

@@ -127,14 +127,14 @@ function categoryShouldBeDisabled(category, location) {
 }
 
 async function addNewItem(name, category, location, quantity) {
-  console.log('click!');
+  console.log(`add new item plz server: ${JSON.stringify({ name, category, location, quantity })}`);
 }
 
 function AddItem({ initial }) {
   const [name, setName] = useState(initial || '');
   const [category, setCategory] = useState('');
   const [location, setLocation] = useState('');
-  const quantityState = useState(0);
+  const quantityState = useState(1);
   const [quantity] = quantityState;
 
   return (
@@ -187,7 +187,9 @@ function AddItem({ initial }) {
 function AddSearch() {
   const [q] = useContext(SearchContext);
 
-  //  const fuse = new Fuse(things);
+  const fuse = new Fuse(things, { keys: ['name', 'category', 'location'] });
+
+  const results = q ? fuse.search(q).map(({ item }) => item) : things;
 
   const [adding, setAdding] = useState(false);
 
@@ -204,7 +206,7 @@ function AddSearch() {
               <ListDivider />
             </>
           )}
-          {things.map((item, i) => {
+          {results.map((item, i) => {
             let status = 'normal';
             if (item.duration.asWeeks() >= 2) status = 'red';
             else if (item.duration.asWeeks() >= 1) status = 'orange';

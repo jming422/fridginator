@@ -1,9 +1,8 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import moment from 'moment/moment';
-import _ from 'lodash';
 import Fuse from 'fuse.js';
 
 import SearchContext from '../../context/SearchContext';

@@ -22,6 +22,8 @@
   "dependencies": {
     "@koa/router": "^8.0.8",
     "axios": "^0.19.2",
+    "db-migrate": "^0.11.11",
+    "db-migrate-pg": "^1.2.1",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.3.0",
     "koa-logger": "^3.2.1",
@@ -39,8 +41,6 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "db-migrate": "^0.11.11",
-    "db-migrate-pg": "^1.2.1",
     "fuse.js": "^5.2.3",
     "nodemon": "^2.0.3",
     "qs": "^6.9.3",

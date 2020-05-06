@@ -9,14 +9,28 @@
     "type": "git",
     "url": "https://github.com/jming422/fridginator.git"
   },
-  "main": "src/index.js",
+  "main": "server/index.js",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "nodemon server/index.js & react-scripts start",
+    "start-backend": "node server/index.js",
+    "start-frontend": "react-scripts start",
+    "migrate": "db-migrate",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@koa/router": "^8.0.8",
+    "axios": "^0.19.2",
+    "koa": "^2.11.0",
+    "koa-bodyparser": "^4.3.0",
+    "koa-logger": "^3.2.1",
+    "koa-respond": "^2.1.0",
+    "koa-static": "^5.0.0",
+    "lodash": "^4.17.15",
+    "moment": "^2.25.1"
+  },
+  "devDependencies": {
     "@emotion/core": "^10.0.28",
     "@fortawesome/fontawesome-svg-core": "^1.2.28",
     "@fortawesome/free-regular-svg-icons": "^5.13.0",
@@ -25,20 +39,20 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "axios": "^0.19.2",
+    "db-migrate": "^0.11.11",
+    "db-migrate-pg": "^1.2.1",
     "fuse.js": "^5.2.3",
-    "lodash": "^4.17.15",
-    "moment": "^2.25.1",
+    "nodemon": "^2.0.3",
     "qs": "^6.9.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1"
   },
-  "devDependencies": {},
   "eslintConfig": {
     "extends": "react-app"
   },
+  "proxy": "http://localhost:5000",
   "browserslist": {
     "production": [
       ">0.2%",

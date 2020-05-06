@@ -1,0 +1,3 @@
+DROP INDEX IF EXISTS item_locations;
+
+DROP TABLE IF EXISTS items;

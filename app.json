@@ -1,0 +1,14 @@
+{
+  "name": "Fridginator",
+  "description": "Keep track of what's in your fridge (and how long it's been there)",
+  "repository": "https://github.com/jming422/fridginator",
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "addons": ["heroku-postgresql:hobby-dev", "logdna:quaco"],
+  "buildpacks": [{ "url": "heroku/nodejs" }],
+  "env": {}
+}

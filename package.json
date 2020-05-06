@@ -1,7 +1,6 @@
 {
   "name": "fridginator",
   "version": "0.1.0",
-  "private": true,
   "description": "Keep track of what's in your fridge (and how long it's been there)",
   "author": "Jonathan Ming",
   "license": "GPL-3.0-or-later",
@@ -11,10 +10,10 @@
   },
   "main": "server/index.js",
   "scripts": {
+    "migrate": "db-migrate",
     "start": "nodemon server/index.js & react-scripts start",
     "start-backend": "node server/index.js",
     "start-frontend": "react-scripts start",
-    "migrate": "db-migrate",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

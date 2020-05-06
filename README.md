@@ -4,10 +4,20 @@
 
 Keep track of what's in your fridge (and how long it's been there)
 
+
+## Start your own Fridginator!
+
+ - Use the **Deploy to Heroku** button above to run it for free on Heroku
+ - // OR //
+ - Clone this repo, then: `npm install && npm start`
+
+
 ## Layout
 
  - Backend is a Koa.js server in the `server/` directory
  - Frontend lives in `src/` and was bootstrapped with [Create React App](https://github.com/facebook/create-react-app)
+
+You may notice that all dependencies that are strictly used by the frontend are in `devDependencies`. This is because they're only needed until the build is completed, and putting them in `devDependencies` let's Heroku know it can exclude them from the final production slug. That way, only the built app is shipped, and all the bulky React & asset packages can be pruned. Plus, when installing locally for development, a regular `npm install` just installs both anyway.
 
 ## Configuration
 

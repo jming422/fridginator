@@ -4,6 +4,10 @@ const pool = new pg.Pool({
   ssl: { rejectUnauthorized: false },
 });
 
+/**
+ * Runs the provided function within a SQL transaction.
+ * @param {Function} fn - Called with one argument, `client`, the DB client
+ */
 async function txn(fn) {
   const client = await pg.connect();
   try {
@@ -12,6 +16,7 @@ async function txn(fn) {
     await client.query('COMMIT');
   } catch (err) {
     await client.query('ROLLBACK');
+    throw err;
   } finally {
     client.release();
   }

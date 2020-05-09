@@ -1,0 +1,2 @@
+ALTER TABLE items
+ADD COLUMN expiry_timestamp TIMESTAMPTZ;

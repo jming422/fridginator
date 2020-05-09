@@ -1,22 +1,20 @@
+const _ = require('lodash');
+
 const db = require('../db');
 
-const COLUMNS = ['id', 'name', 'location', 'category', 'quantity', 'added_timestamp', 'expiry_timestamp', 'upc_code'];
+const NONNULL_COLUMNS = ['name', 'location', 'category', 'quantity'];
+const NULL_COLUMNS = ['added_timestamp', 'expiry_timestamp', 'upc_code'];
+
+const COLUMNS = ['id'].concat(NONNULL_COLUMNS, NULL_COLUMNS);
 
 function xformForFrontend(item) {
-  item.addedTimestamp = item.added_timestamp && item.added_timestamp.valueOf();
-  delete item.added_timestamp;
-
-  item.expiryTimestamp = item.expiry_timestamp && item.expiry_timestamp.valueOf();
-  delete item.expiry_timestamp;
-
-  item.upc = item.upc_code;
-  delete item.upc_code;
-
+  item.added_timestamp = item.added_timestamp && item.added_timestamp.valueOf();
+  item.expiry_timestamp = item.expiry_timestamp && item.expiry_timestamp.valueOf();
   return item;
 }
 
 async function getAllItems(location) {
-  const q = `SELECT ${COLUMNS.join(',')} FROM items`;
+  const q = `SELECT ${COLUMNS.join()} FROM items`;
   const params = [];
 
   if (location) {
@@ -30,7 +28,7 @@ async function getAllItems(location) {
 
 async function getAvailableItems(location) {
   const q = `
-    SELECT ${COLUMNS.join(',')}
+    SELECT ${COLUMNS.join()}
     FROM items
     WHERE quantity > 0
   `;
@@ -50,4 +48,36 @@ async function itemIdExists(id) {
   return rows.length === 1;
 }
 
-module.exports = { getAllItems, getAvailableItems, itemIdExists };
+// Note: it's up to the route to validate `item` before passing it into this function!
+async function insertItem(item) {
+  const [keys, values] = _.unzip(Object.entries(item));
+
+  const q = `
+    INSERT INTO items (${keys.join()})
+    VALUES (${keys.map((_k, i) => `$${i + 1}`).join()})
+  `;
+  await db.query(q, values);
+}
+
+// Note: it's up to the route to validate `updates` before passing it into this function!
+async function updateItem(id, updates) {
+  const [keys, values] = _.unzip(Object.entries(updates));
+
+  const q = `
+    UPDATE items
+    SET ${keys.map((k, i) => `${k} = $${i + 2}`).join()}
+    WHERE id = $1
+  `;
+  await db.query(q, [id, ...values]);
+}
+
+module.exports = {
+  COLUMNS,
+  NONNULL_COLUMNS,
+  NULL_COLUMNS,
+  getAllItems,
+  getAvailableItems,
+  itemIdExists,
+  insertItem,
+  updateItem,
+};

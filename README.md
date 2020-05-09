@@ -9,7 +9,10 @@ Keep track of what's in your fridge (and how long it's been there)
 
  - Use the **Deploy to Heroku** button above to run it for free on Heroku
  - // OR //
- - Clone this repo, then: `npm install && npm start`
+ - Clone this repo, ensure you have Node and PostgreSQL installed, then run the included setup script:
+   - `$ ./initial-setup.sh`
+ - Then start the app:
+   - `$ npm start`
 
 
 ## Layout

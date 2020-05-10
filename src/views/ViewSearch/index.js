@@ -2,7 +2,7 @@
 
 import { jsx } from '@emotion/core';
 import { useRouteMatch, Redirect, Switch, Route } from 'react-router-dom';
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import useFetch from 'use-http';
 
 import { itemsOpts } from '../../utils/fetchOpts';

@@ -3,13 +3,13 @@
 import { jsx, css } from '@emotion/core';
 
 const boxStyle = css`
-  width: 100%;
-  margin: 0rem 1rem;
-  padding: 1rem;
+  width: 90%;
+  padding: 1.5rem;
+  font-size: 1.6rem;
   text-align: left;
   font-style: italic;
   background-color: var(--white);
-  border-radius: 2rem;
+  border-radius: 1rem;
 `;
 
 const colorByType = (type) => {
@@ -28,7 +28,7 @@ function Message({ message, type = 'info' }) {
   return (
     <div css={[boxStyle, colorByType(type)]}>
       {type === 'error' && 'Error: '}
-      {message}
+      {`${message}`}
     </div>
   );
 }

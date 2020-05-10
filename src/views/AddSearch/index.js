@@ -193,20 +193,20 @@ function AddSearch() {
               <ListDivider />
             </>
           )}
-          {results.map((item, i) => {
+          {results.map(({ name, quantity, location, category, duration }, i) => {
             let status = 'normal';
-            if (item.duration.asWeeks() >= 2) status = 'red';
-            else if (item.duration.asWeeks() >= 1) status = 'orange';
+            if (duration && duration.asWeeks() >= 2) status = 'red';
+            else if (duration && duration.asWeeks() >= 1) status = 'orange';
 
             return (
               <li key={i} css={listItemStyle(status)}>
-                <div css={itemNameStyle}>{item.name}</div>
-                <div>{idToName(item.category)}</div>
+                <div css={itemNameStyle}>{name}</div>
+                <div>{idToName(category)}</div>
                 <div css={{ textTransform: 'capitalize' }}>
-                  {item.location} ({item.duration.humanize()})
+                  {location} {duration && `(${duration.humanize()})`}
                 </div>
                 <QuantityPicker
-                  initial={item.quantity}
+                  initial={quantity}
                   onChange={(newVal) => {
                     console.log(`send to server ${newVal}`);
                     // refresh();

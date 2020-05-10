@@ -3,6 +3,7 @@
 import { jsx, css } from '@emotion/core';
 import React, { useState, useEffect } from 'react'; // eslint-disable-line
 import { BrowserRouter as Router, Switch, Route, Redirect, useHistory, useLocation } from 'react-router-dom';
+import { Provider } from 'use-http';
 
 import SearchContext from './context/SearchContext';
 
@@ -65,7 +66,9 @@ function AppContainer() {
   return (
     <div className="App" css={appContainer}>
       <Router>
-        <App />
+        <Provider url="/api/v1">
+          <App />
+        </Provider>
       </Router>
     </div>
   );

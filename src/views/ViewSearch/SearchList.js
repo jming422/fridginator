@@ -6,28 +6,10 @@ import moment from 'moment/moment';
 import Fuse from 'fuse.js';
 
 import SearchContext from '../../context/SearchContext';
+import ItemsListContext from '../../context/ItemsListContext';
 import { idToName } from '../../utils/categories';
 
 import QuantityPicker from '../../components/QuantityPicker';
-
-const d2 = moment.duration(2, 'weeks');
-const d1 = moment.duration(1, 'week');
-const d = moment.duration(2, 'days');
-
-const things = [
-  { id: 0, name: 'thing0', quantity: 12, category: 'eggs-dairy', location: 'fridge', duration: d2 },
-  { id: 1, name: 'thing1', quantity: 1, category: 'meats', location: 'fridge', duration: d1 },
-  { id: 2, name: 'thing2', quantity: 2, category: 'meats', location: 'freezer', duration: d },
-  { id: 3, name: 'thing3', quantity: 3, category: 'meats', location: 'freezer', duration: d },
-  { id: 4, name: 'thing4', quantity: 4, category: 'meats', location: 'freezer', duration: d },
-  { id: 5, name: 'thing5', quantity: 5, category: 'meats', location: 'freezer', duration: d },
-  { id: 6, name: 'thing6', quantity: 6, category: 'meats', location: 'freezer', duration: d },
-  { id: 7, name: 'thing7', quantity: 7, category: 'meats', location: 'freezer', duration: d },
-  { id: 8, name: 'thing8', quantity: 8, category: 'desserts', location: 'freezer', duration: d },
-  { id: 9, name: 'thing9', quantity: 9, category: 'meats', location: 'freezer', duration: d },
-  { id: 10, name: 'thing10', quantity: 10, category: 'drinks', location: 'fridge', duration: d },
-  { id: 11, name: 'thing11', quantity: 11, category: 'vegetables', location: 'fridge', duration: d },
-];
 
 const listStyle = css`
   height: 100%;
@@ -74,12 +56,13 @@ const itemNameStyle = css`
 `;
 
 function SearchList({ place, category }) {
+  const [items, refresh] = useContext(ItemsListContext);
   const [q] = useContext(SearchContext);
 
-  const filteredThings = things.filter((t) => t.location === place && (!category || t.category === category));
-  const fuse = new Fuse(filteredThings, { keys: ['name'] });
+  const filteredItems = items.filter((t) => t.location === place && (!category || t.category === category));
+  const fuse = new Fuse(filteredItems, { keys: ['name'] });
 
-  const results = q ? fuse.search(q).map(({ item }) => item) : filteredThings;
+  const results = q ? fuse.search(q).map(({ item }) => item) : filteredItems;
 
   return (
     <ul css={listStyle}>
@@ -95,7 +78,13 @@ function SearchList({ place, category }) {
             <div css={{ textTransform: 'capitalize' }}>
               {item.location} ({item.duration.humanize()})
             </div>
-            <QuantityPicker initial={item.quantity} onChange={(newQty) => console.log(`server update ${newQty}`)} />
+            <QuantityPicker
+              initial={item.quantity}
+              onChange={(newQty) => {
+                console.log(`server update ${newQty}`);
+                // refresh();
+              }}
+            />
           </li>
         );
       })}

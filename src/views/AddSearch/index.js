@@ -3,37 +3,21 @@
 
 import { jsx, css } from '@emotion/core';
 import React, { useState, useContext } from 'react'; // eslint-disable-line
-import moment from 'moment/moment';
 import Fuse from 'fuse.js';
+import useFetch from 'use-http';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import SearchContext from '../../context/SearchContext';
+import { itemsOpts } from '../../utils/fetchOpts';
 
+import Message from '../../components/Message';
 import QuantityPicker from '../../components/QuantityPicker';
 import ListDivider from '../../components/ListDivider';
 import SearchView from '../../components/SearchView';
 
 import { ALL_CATEGORIES, isFridgeCategory, isFreezerCategory, idToName } from '../../utils/categories';
-
-const d2 = moment.duration(2, 'weeks');
-const d1 = moment.duration(1, 'week');
-const d = moment.duration(2, 'days');
-
-const things = [
-  { id: 0, name: 'thing0', quantity: 12, category: 'eggs-dairy', location: 'fridge', duration: d2 },
-  { id: 1, name: 'thing1', quantity: 1, category: 'meats', location: 'fridge', duration: d1 },
-  { id: 2, name: 'thing2', quantity: 2, category: 'meats', location: 'freezer', duration: d },
-  { id: 3, name: 'thing3', quantity: 3, category: 'meats', location: 'freezer', duration: d },
-  { id: 4, name: 'thing4', quantity: 4, category: 'meats', location: 'freezer', duration: d },
-  { id: 5, name: 'thing5', quantity: 5, category: 'meats', location: 'freezer', duration: d },
-  { id: 6, name: 'thing6', quantity: 6, category: 'meats', location: 'freezer', duration: d },
-  { id: 7, name: 'thing7', quantity: 7, category: 'meats', location: 'freezer', duration: d },
-  { id: 8, name: 'thing8', quantity: 8, category: 'desserts', location: 'freezer', duration: d },
-  { id: 9, name: 'thing9', quantity: 9, category: 'meats', location: 'freezer', duration: d },
-  { id: 10, name: 'thing10', quantity: 10, category: 'drinks', location: 'fridge', duration: d },
-  { id: 11, name: 'thing11', quantity: 11, category: 'vegetables', location: 'fridge', duration: d },
-];
 
 const listStyle = css`
   height: 100%;
@@ -125,11 +109,7 @@ function categoryShouldBeDisabled(category, location) {
   );
 }
 
-async function addNewItem(name, category, location, quantity) {
-  console.log(`add new item plz server: ${JSON.stringify({ name, category, location, quantity })}`);
-}
-
-function AddItem({ initial }) {
+function AddItem({ initial, submitFn }) {
   const [name, setName] = useState(initial || '');
   const [category, setCategory] = useState('');
   const [location, setLocation] = useState('');
@@ -176,7 +156,7 @@ function AddItem({ initial }) {
         <option value="freezer">Freezer</option>
       </select>
       <QuantityPicker customState={quantityState} />
-      <div css={addSaveStyle} onClick={() => addNewItem(name, category, location, quantity)}>
+      <div css={addSaveStyle} onClick={() => submitFn({ name, category, location, quantity })}>
         Add
       </div>
     </li>
@@ -185,12 +165,19 @@ function AddItem({ initial }) {
 
 function AddSearch() {
   const [q] = useContext(SearchContext);
-
-  const fuse = new Fuse(things, { keys: ['name', 'category', 'location'] });
-
-  const results = q ? fuse.search(q).map(({ item }) => item) : things;
-
   const [adding, setAdding] = useState(false);
+  const [refreshItems, setRefreshItems] = useState(0);
+  const refresh = () => setRefreshItems((old) => old + 1);
+  const { error, data = [] } = useFetch('/items/list?filter=all', itemsOpts, [refreshItems]);
+
+  const submitFn = async (newItem) => {
+    console.log(`add new item plz server: ${JSON.stringify(newItem)}`);
+    refresh();
+  };
+
+  const fuse = new Fuse(data, { keys: ['name', 'category', 'location'] });
+
+  const results = q ? fuse.search(q).map(({ item }) => item) : data;
 
   return (
     <>
@@ -198,10 +185,11 @@ function AddSearch() {
         <FontAwesomeIcon icon={faPlus} />
       </div>
       <SearchView>
+        {error && <Message type="error" message={error} />}
         <ul css={listStyle}>
           {adding && (
             <>
-              <AddItem initial={q} />
+              <AddItem initial={q} submitFn={submitFn} />
               <ListDivider />
             </>
           )}
@@ -219,7 +207,10 @@ function AddSearch() {
                 </div>
                 <QuantityPicker
                   initial={item.quantity}
-                  onChange={(newVal) => console.log(`send to server ${newVal}`)}
+                  onChange={(newVal) => {
+                    console.log(`send to server ${newVal}`);
+                    // refresh();
+                  }}
                 />
               </li>
             );

@@ -12,7 +12,7 @@
   "scripts": {
     "migrate": "db-migrate",
     "start": "nodemon server/index.js & react-scripts start",
-    "start-backend": "node server/index.js",
+    "start-backend": "nodemon server/index.js",
     "start-frontend": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

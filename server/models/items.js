@@ -1,11 +1,48 @@
 const _ = require('lodash');
 
 const db = require('../db');
+const { locationIsValid } = require('./locations');
 
 const NONNULL_COLUMNS = ['name', 'location', 'category', 'quantity'];
 const NULL_COLUMNS = ['added_timestamp', 'expiry_timestamp', 'upc_code'];
 
 const COLUMNS = ['id'].concat(NONNULL_COLUMNS, NULL_COLUMNS);
+
+// TODO: Something better like JSON Schema or something
+function itemIsValid(item) {
+  const requestKeys = Object.keys(item);
+  const missingRequiredKeys = _.difference(NONNULL_COLUMNS, requestKeys);
+  if (missingRequiredKeys.length > 0) {
+    return {
+      valid: false,
+      reason: `Missing required item keys: ${missingRequiredKeys.join(', ')}`,
+    };
+  }
+
+  const extraRequestKeys = _.difference(requestKeys, NONNULL_COLUMNS, NULL_COLUMNS);
+  if (extraRequestKeys.length > 0) {
+    return {
+      valid: false,
+      reason: `Don't know what to do with extra keys provided: ${extraRequestKeys.join(', ')}`,
+    };
+  }
+
+  if (!locationIsValid(item.location)) {
+    return {
+      valid: false,
+      reason: `Invalid location: ${item.location}`,
+    };
+  }
+
+  if (isNaN(item.quantity)) {
+    return {
+      valid: false,
+      reason: `Invalid quantity: ${item.quantity}`,
+    };
+  }
+
+  return { valid: true };
+}
 
 function xformForFrontend(item) {
   item.added_timestamp = item.added_timestamp && item.added_timestamp.valueOf();
@@ -14,7 +51,7 @@ function xformForFrontend(item) {
 }
 
 async function getAllItems(location) {
-  const q = `SELECT ${COLUMNS.join()} FROM items`;
+  let q = `SELECT ${COLUMNS.join()} FROM items`;
   const params = [];
 
   if (location) {
@@ -27,7 +64,7 @@ async function getAllItems(location) {
 }
 
 async function getAvailableItems(location) {
-  const q = `
+  let q = `
     SELECT ${COLUMNS.join()}
     FROM items
     WHERE quantity > 0
@@ -78,6 +115,7 @@ module.exports = {
   getAllItems,
   getAvailableItems,
   itemIdExists,
+  itemIsValid,
   insertItem,
   updateItem,
 };

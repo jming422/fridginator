@@ -1,9 +1,9 @@
 const _ = require('lodash');
 
 const model = require('../models/items');
-const { VALID_LOCATIONS } = require('../models/locations');
+const { locationIsValid } = require('../models/locations');
 
-// GET /items/list/:location ?filter={available, all} (default: available)
+// GET /items/list/:location? ?filter={available, all} (default: available)
 async function list(ctx) {
   const {
     params: { location },
@@ -11,11 +11,11 @@ async function list(ctx) {
   } = ctx;
 
   const loc = location && location.toLowerCase();
-  if (loc && !VALID_LOCATIONS.includes(loc)) {
+  if (!locationIsValid(loc)) {
     return ctx.badRequest(`Invalid location: ${loc}`);
   }
 
-  const fltr = filter && fltr.toLowerCase();
+  const fltr = filter && filter.toLowerCase();
 
   try {
     if (fltr === 'all') {
@@ -41,15 +41,9 @@ async function upsert(ctx) {
   } = ctx;
 
   // Validate body
-  const requestKeys = Object.keys(body);
-  for (let requiredKey of model.NONNULL_COLUMNS) {
-    if (!requestKeys.includes(requiredKey)) {
-      return ctx.badRequest(`Missing required item key ${requiredKey}`);
-    }
-  }
-  const extraRequestKeys = _.difference(requestKeys, model.NONNULL_COLUMNS, model.NULL_COLUMNS);
-  if (extraRequestKeys.length > 0) {
-    return ctx.badRequest(`Don't know what to do with extra keys provided: ${extraRequestKeys.join()}`);
+  const { valid, reason } = model.itemIsValid(body);
+  if (!valid) {
+    return ctx.badRequest(reason);
   }
 
   try {

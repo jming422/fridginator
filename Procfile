@@ -1,2 +1,2 @@
-web: npm run start-backend
+web: node server/index.js
 release: npm run migrate up

@@ -1,7 +1,7 @@
-const pg = require('pg');
-const pool = new pg.Pool({
+const { Pool } = require('pg');
+const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
+  ssl: process.env.NODE_ENV === 'development' ? false : { rejectUnauthorized: false },
 });
 
 /**
@@ -9,7 +9,7 @@ const pool = new pg.Pool({
  * @param {Function} fn - Called with one argument, `client`, the DB client
  */
 async function txn(fn) {
-  const client = await pg.connect();
+  const client = await pool.connect();
   try {
     await client.query('BEGIN');
     await fn(client);
@@ -22,4 +22,10 @@ async function txn(fn) {
   }
 }
 
-module.exports = { query: pool.query, connect: pool.connect, txn };
+module.exports = {
+  txn,
+  // Apparently the way pg promisifies things doesn't work unless we wrap
+  // their functions like this:
+  query: (...args) => pool.query(...args),
+  connect: (...args) => pool.connect(...args),
+};

@@ -1,10 +1,12 @@
+require('dotenv').config();
+
 const path = require('path');
 
 const Koa = require('koa');
 const BodyParser = require('koa-bodyparser');
-const logger = require('koa-logger');
-const respond = require('koa-respond');
-const serve = require('koa-static');
+const Logger = require('koa-logger');
+const Respond = require('koa-respond');
+const Serve = require('koa-static');
 
 const router = require('./router');
 
@@ -12,11 +14,11 @@ const PORT = parseInt(process.env.PORT, 10) || 5000;
 
 const app = new Koa();
 
-app.use(logger());
+app.use(Logger());
 app.use(BodyParser());
-app.use(respond());
+app.use(Respond());
 
-app.use(serve(path.join(__dirname, '..', '/build')));
+app.use(Serve(path.join(__dirname, '..', '/build')));
 app.use(router.routes());
 app.use(router.allowedMethods());
 

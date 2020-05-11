@@ -14,7 +14,7 @@ import AddSearch from './views/AddSearch';
 
 const appContainer = css`
   height: 100vh;
-  width: 80vw;
+  width: 90vw;
   max-width: 80rem;
   display: flex;
   flex-direction: column;

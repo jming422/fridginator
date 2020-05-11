@@ -5,9 +5,11 @@ import { jsx, css } from '@emotion/core';
 import React, { useState, useContext } from 'react'; // eslint-disable-line
 import Fuse from 'fuse.js';
 import useFetch from 'use-http';
+import Truncate from 'react-truncate';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faTint, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faSnowflake } from '@fortawesome/free-regular-svg-icons';
 
 import SearchContext from '../../context/SearchContext';
 import { itemsOpts } from '../../utils/fetchOpts';
@@ -22,9 +24,8 @@ import { ALL_CATEGORIES, isFridgeCategory, isFreezerCategory, idToName } from '.
 const listStyle = css`
   height: 100%;
   width: 100%;
+  max-width: 70rem;
   margin-top: -2rem;
-  margin-left: 2rem;
-  margin-right: 2rem;
   padding: 0;
 `;
 
@@ -43,11 +44,12 @@ const listItemStyle = (status) => {
   return css`
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
+    text-align: left;
 
-    margin: 2rem;
-    padding: 1.5rem;
+    margin: 2rem 0rem;
+    padding: 1rem;
 
     background-color: var(--white);
     color: var(--gray);
@@ -61,6 +63,7 @@ const listItemStyle = (status) => {
 const itemNameStyle = css`
   color: var(--black);
   font-weight: bold;
+  flex-grow: 1;
 `;
 
 const addBtnStyle = (adding) => css`
@@ -77,6 +80,10 @@ const addBtnStyle = (adding) => css`
   cursor: pointer;
   background-color: ${adding ? 'var(--white)' : 'var(--blue)'};
   color: ${adding ? 'var(--red)' : 'var(--white)'};
+  transition: all 0.15s ease-out;
+`;
+
+const addBtnAnim = (adding) => css`
   transform: ${adding ? 'rotate(45deg)' : 'none'};
   transition: all 0.15s ease-out;
 `;
@@ -101,6 +108,26 @@ const addSaveStyle = css`
   cursor: pointer;
   color: var(--white);
   background-color: var(--blue);
+`;
+
+const categoryStyle = css`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-right: 1rem;
+  min-width: 8.5rem;
+  max-width: 25%;
+`;
+
+const iconStyle = css`
+  color: var(--blue);
+  margin-right: 0.5rem;
+`;
+
+const pickerStyle = css`
+  min-width: 8rem;
+  width: 10%;
+  margin-left: 1rem;
 `;
 
 function categoryShouldBeDisabled(category, location) {
@@ -168,24 +195,27 @@ function AddSearch() {
   const [adding, setAdding] = useState(false);
   const [refreshItems, setRefreshItems] = useState(0);
   const refresh = () => setRefreshItems((old) => old + 1);
-  const { error, data = [] } = useFetch('/items/list?filter=all', itemsOpts, [refreshItems]);
+  const { error, loading, data } = useFetch('/items/list?filter=all', itemsOpts, [refreshItems]);
+
+  const items = Array.isArray(data) ? data : [];
 
   const submitFn = async (newItem) => {
     console.log(`add new item plz server: ${JSON.stringify(newItem)}`);
     refresh();
   };
 
-  const fuse = new Fuse(data, { keys: ['name', 'category', 'location'] });
+  const fuse = new Fuse(items, { keys: ['name', 'category', 'location'] });
 
-  const results = q ? fuse.search(q).map(({ item }) => item) : data;
+  const results = q ? fuse.search(q).map(({ item }) => item) : items;
 
   return (
     <>
       <div css={addBtnStyle(adding)} onClick={() => setAdding((old) => !old)}>
-        <FontAwesomeIcon icon={faPlus} />
+        <FontAwesomeIcon icon={faPlus} css={addBtnAnim(adding)} />
       </div>
       <SearchView>
-        {error && <Message type="error" message={error} />}
+        {error && <Message type="error" message={data} />}
+        {loading && <Message message="Still loading list..." />}
         <ul css={listStyle}>
           {adding && (
             <>
@@ -198,20 +228,29 @@ function AddSearch() {
             if (duration && duration.asWeeks() >= 2) status = 'red';
             else if (duration && duration.asWeeks() >= 1) status = 'orange';
 
+            let locationIcon;
+            if (location === 'fridge') locationIcon = faTint;
+            else if (location === 'freezer') locationIcon = faSnowflake;
+
             return (
               <li key={i} css={listItemStyle(status)}>
-                <div css={itemNameStyle}>{name}</div>
-                <div>{idToName(category)}</div>
-                <div css={{ textTransform: 'capitalize' }}>
-                  {location} {duration && `(${duration.humanize()})`}
+                <div css={itemNameStyle}>
+                  <Truncate lines={2}>{name}</Truncate>
                 </div>
-                <QuantityPicker
-                  initial={quantity}
-                  onChange={(newVal) => {
-                    console.log(`send to server ${newVal}`);
-                    // refresh();
-                  }}
-                />
+                <div css={categoryStyle}>
+                  {locationIcon && <FontAwesomeIcon icon={locationIcon} css={iconStyle} />}
+                  <Truncate>{idToName(category)}</Truncate>
+                </div>
+
+                <div css={pickerStyle}>
+                  <QuantityPicker
+                    initial={quantity}
+                    onChange={(newVal) => {
+                      console.log(`send to server ${newVal}`);
+                      // refresh();
+                    }}
+                  />
+                </div>
               </li>
             );
           })}

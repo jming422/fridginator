@@ -10,13 +10,12 @@ const pickerStyle = css`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 12%;
   height: 100%;
 `;
 
 const iconStyle = css`
   height: 100%;
-  font-size: 1.6rem;
+  font-size: 2rem;
   cursor: pointer;
 `;
 
@@ -30,12 +29,17 @@ const minusIconStyle = css`
   color: var(--red);
 `;
 
+const inputBoxStyle = css`
+  border-bottom: 0.1rem solid var(--blue);
+  color: var(--blue);
+`;
+
 const inputStyle = css`
   max-width: 2.2rem;
   text-align: center;
   background: transparent;
   border: none;
-  color: var(--black);
+  color: var(--dark-blue);
   font-size: 2rem;
 `;
 
@@ -61,17 +65,19 @@ function QuantityPicker({ initial, customState, onChange = () => {} }) {
       >
         <FontAwesomeIcon icon={faMinus} />
       </div>
-      <input
-        type="text"
-        css={inputStyle}
-        value={qty}
-        onClick={(e) => e.target.select()}
-        onChange={(e) => {
-          const newVal = e.target.value;
-          onChange(newVal);
-          setQty(newVal);
-        }}
-      />
+      <div css={inputBoxStyle}>
+        <input
+          type="text"
+          css={inputStyle}
+          value={qty}
+          onClick={(e) => e.target.select()}
+          onChange={(e) => {
+            const newVal = e.target.value;
+            onChange(newVal);
+            setQty(newVal);
+          }}
+        />
+      </div>
       <div
         css={plusIconStyle}
         onClick={() => {

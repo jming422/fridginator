@@ -21,7 +21,7 @@ const searchContainer = css`
 `;
 
 const searchBarStyle = css`
-  width: 80%;
+  width: 75%;
   padding-bottom: 0.5rem;
   margin-bottom: 4rem;
   font-size: 2rem;
@@ -38,7 +38,7 @@ const searchInputStyle = css`
   flex-grow: 1;
   background: transparent;
   border: none;
-  color: var(--blue);
+  color: var(--dark-blue);
   font-size: 2rem;
   font-style: italic;
 `;

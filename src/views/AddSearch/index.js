@@ -15,6 +15,7 @@ import { itemsOpts } from '../../utils/fetchOpts';
 import Message from '../../components/Message';
 import SearchView from '../../components/SearchView';
 import AddItemList from '../../components/AddItemList';
+import { flexCenter } from '../../styles/positions';
 
 const addBtnStyle = (adding) => css`
   position: absolute;
@@ -24,9 +25,7 @@ const addBtnStyle = (adding) => css`
   width: 4rem;
   border-radius: 3rem;
   font-size: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  ${flexCenter}
   cursor: pointer;
   background-color: ${adding ? 'var(--white)' : 'var(--blue)'};
   color: ${adding ? 'var(--red)' : 'var(--white)'};
@@ -45,9 +44,12 @@ function AddSearch() {
   const refresh = () => setRefreshItems((old) => old + 1);
   const { error, loading, data } = useFetch('/items/list?filter=all', itemsOpts, [refreshItems]);
 
+  //  const { post: createItem } = useFetch('/items');
+
   const items = Array.isArray(data) ? data : [];
 
   const submitFn = async (newItem) => {
+    const { name, category, location, quantity } = newItem;
     console.log(`add new item plz server: ${JSON.stringify(newItem)}`);
     refresh();
   };

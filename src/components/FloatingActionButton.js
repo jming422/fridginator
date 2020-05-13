@@ -4,18 +4,17 @@ import { jsx, css } from '@emotion/core';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { flexCenter } from '../styles/positions';
 
 const fabStyle = css`
   position: absolute;
-  right: 6rem;
-  bottom: 6rem;
+  right: 1rem;
+  bottom: 3rem;
   height: 6rem;
   width: 6rem;
   border-radius: 3rem;
   font-size: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  ${flexCenter}
   cursor: pointer;
   background-color: var(--dark-blue);
   color: var(--white);

@@ -4,6 +4,7 @@ import { jsx, css } from '@emotion/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
+import { flexCenter } from '../styles/positions';
 
 const pickerStyle = css`
   display: flex;
@@ -11,10 +12,12 @@ const pickerStyle = css`
   justify-content: space-between;
   align-items: center;
   height: 100%;
+  min-width: 8rem;
 `;
 
 const iconStyle = css`
   height: 100%;
+  ${flexCenter}
   font-size: 2rem;
   cursor: pointer;
 `;

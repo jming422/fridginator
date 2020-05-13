@@ -4,22 +4,23 @@
 import { jsx, css } from '@emotion/core';
 import React from 'react'; // eslint-disable-line
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTint, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { /* faDoorClosed, */ faTint, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { faSnowflake } from '@fortawesome/free-regular-svg-icons';
 
 import FAB from '../../components/FloatingActionButton';
-import { centerRow, container } from '../../styles/positions';
+import { flexCenter, container } from '../../styles/positions';
 import { Link } from 'react-router-dom';
 
 const homeCardStyle = css`
-  height: 30%;
+  height: 25vh;
   width: 100%;
   max-width: 40rem;
   border-radius: 3rem;
-  margin: 2rem 0rem;
+  margin-top: 2rem;
   font-size: 4rem;
   cursor: pointer;
-  ${centerRow}
+  ${flexCenter}
+  flex-direction: row;
 `;
 
 const freezerStyle = css`
@@ -31,6 +32,11 @@ const fridgeStyle = css`
   background-color: var(--blue);
   color: var(--white);
 `;
+
+// const pantryStyle = css`
+//   background-color: var(--dark-blue);
+//   color: var(--light-blue);
+// `;
 
 function HomeCard({ title, customCss, icon, linkTo }) {
   return (
@@ -46,6 +52,7 @@ function Home() {
     <div css={container}>
       <HomeCard title="Freezer" customCss={freezerStyle} icon={faSnowflake} linkTo="/view/freezer" />
       <HomeCard title="Fridge" customCss={fridgeStyle} icon={faTint} linkTo="/view/fridge" />
+      {/* <HomeCard title="Pantry" customCss={pantryStyle} icon={faDoorClosed} linkTo="/view/pantry" /> */}
       <Link to="/add">
         <FAB icon={faShoppingCart} />
       </Link>

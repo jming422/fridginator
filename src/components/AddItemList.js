@@ -11,6 +11,7 @@ import ListDivider from './ListDivider';
 import QuantityPicker from './QuantityPicker';
 
 import { ALL_CATEGORIES, isFridgeCategory, isFreezerCategory } from '../utils/categories';
+import { flexCenter } from '../styles/positions';
 
 function categoryShouldBeDisabled(category, location) {
   return (
@@ -45,9 +46,7 @@ const addSelectStyle = css`
 `;
 
 const addSaveStyle = css`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${flexCenter}
   font-size: 1.4rem;
   font-weight: bold;
   padding: 0.5rem 0.75rem;

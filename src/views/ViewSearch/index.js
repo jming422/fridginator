@@ -23,7 +23,9 @@ function ViewSearch() {
   const [refreshItems, setRefreshItems] = useState(0);
   const refresh = () => setRefreshItems((old) => old + 1);
   const loc = place ? place : '';
-  const { error, data = [] } = useFetch(`/items/list/${loc}`, itemsOpts, [place, refreshItems]);
+  const { error, loading, data } = useFetch(`/items/list/${loc}`, itemsOpts, [place, refreshItems]);
+
+  const items = Array.isArray(data) ? data : [];
 
   if (!['fridge', 'freezer'].includes(place)) {
     return <Redirect to="/" />;
@@ -31,9 +33,10 @@ function ViewSearch() {
 
   return (
     <SearchView>
-      <ItemsListContext.Provider value={[data, refresh]}>
+      <ItemsListContext.Provider value={[items, refresh]}>
         <Switch>
-          {error && <Message type="error" message={error} />}
+          {error && <Message customCss={{ marginBottom: '2rem' }} type="error" message={data} />}
+          {loading && <Message customCss={{ marginBottom: '2rem' }} message="Still loading list..." />}
           <Route exact path={match.path}>
             {q ? <SearchList place={place} /> : <Categories />}
           </Route>

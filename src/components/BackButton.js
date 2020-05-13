@@ -7,6 +7,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import SearchContext from '../context/SearchContext';
+import { flexCenter } from '../styles/positions';
 
 const btnStyle = css`
   position: absolute;
@@ -15,9 +16,7 @@ const btnStyle = css`
   height: 4rem;
   width: 4rem;
   font-size: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  ${flexCenter}
   cursor: pointer;
   color: var(--blue);
 `;

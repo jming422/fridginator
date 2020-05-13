@@ -4,16 +4,19 @@ import { jsx, css } from '@emotion/core';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { centerRow } from '../../styles/positions';
+import { flexCenter } from '../../styles/positions';
 
 import { FREEZER_CATEGORIES, FRIDGE_CATEGORIES } from '../../utils/categories';
 
 const gridContainer = css`
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   justify-content: center;
-  margin: -2rem;
+  flex-wrap: wrap;
+  margin: -1rem 2rem 0rem 2rem;
+  padding: 0;
 `;
 
 const cardStyle = css`
@@ -24,7 +27,8 @@ const cardStyle = css`
   background-color: var(--white);
   color: var(--blue);
   font-size: 3rem;
-  ${centerRow}
+  ${flexCenter}
+  flex-direction: row;
 `;
 
 function Card({ icon, title, linkTo }) {

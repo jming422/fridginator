@@ -4,10 +4,10 @@ import { jsx } from '@emotion/core';
 import { useContext } from 'react';
 import Fuse from 'fuse.js';
 
-import SearchContext from '../../context/SearchContext';
-import ItemsListContext from '../../context/ItemsListContext';
+import SearchContext from '../context/SearchContext';
+import ItemsListContext from '../context/ItemsListContext';
 
-import ItemList from '../../components/ItemList';
+import ItemList from '../components/ItemList';
 
 function SearchList({ place, category }) {
   const { data } = useContext(ItemsListContext);

@@ -9,14 +9,14 @@ import useFetch from 'use-http';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import SearchContext from '../../context/SearchContext';
-import { itemsOpts } from '../../utils/fetchOpts';
+import SearchContext from '../context/SearchContext';
+import { itemsOpts } from '../utils/fetchOpts';
 
-import Message from '../../components/Message';
-import SearchView from '../../components/SearchView';
-import AddItemList from '../../components/AddItemList';
-import { flexCenter } from '../../styles/positions';
-import ItemsListContext from '../../context/ItemsListContext';
+import Message from '../components/Message';
+import SearchView from '../components/SearchView';
+import AddItemList from '../components/AddItemList';
+import { flexCenter } from '../styles/positions';
+import ItemsListContext from '../context/ItemsListContext';
 
 const addBtnStyle = (adding) => css`
   position: absolute;

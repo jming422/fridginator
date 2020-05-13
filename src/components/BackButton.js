@@ -23,11 +23,15 @@ const btnStyle = css`
 
 function BackButton({ customCss, onClick }) {
   const history = useHistory();
-  const match = useRouteMatch({ path: '/view/:place', exact: true });
+  const placeMatch = useRouteMatch({ path: '/view/:place', exact: true });
+  const homeMatch = useRouteMatch({ path: '/', exact: true });
   const [q, setQ] = useContext(SearchContext);
 
   const smartGoBack = () => {
-    if (q && match) {
+    if (homeMatch) {
+      if (q) setQ('');
+      history.replace({ search: '' });
+    } else if (q && placeMatch) {
       setQ('');
       history.replace({ search: '' });
     } else {

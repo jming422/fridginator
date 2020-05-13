@@ -8,7 +8,7 @@ import SearchContext from '../../context/SearchContext';
 import ItemsListContext from '../../context/ItemsListContext';
 
 import Categories from './Categories';
-import SearchList from './SearchList';
+import SearchList from '../SearchList';
 import SearchView from '../../components/SearchView';
 import Message from '../../components/Message';
 

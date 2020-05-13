@@ -2,14 +2,18 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx, css } from '@emotion/core';
-import React from 'react'; // eslint-disable-line
+import React, { useContext } from 'react'; // eslint-disable-line
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { /* faDoorClosed, */ faTint, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { faSnowflake } from '@fortawesome/free-regular-svg-icons';
 
-import FAB from '../../components/FloatingActionButton';
-import { flexCenter, container } from '../../styles/positions';
-import { Link } from 'react-router-dom';
+import { flexCenter, container } from '../styles/positions';
+import SearchContext from '../context/SearchContext';
+
+import FAB from '../components/FloatingActionButton';
+import SearchView from '../components/SearchView';
+import SearchList from './SearchList';
 
 const homeCardStyle = css`
   height: 25vh;
@@ -48,15 +52,23 @@ function HomeCard({ title, customCss, icon, linkTo }) {
 }
 
 function Home() {
+  const [q] = useContext(SearchContext);
+
   return (
-    <div css={container}>
-      <HomeCard title="Freezer" customCss={freezerStyle} icon={faSnowflake} linkTo="/view/freezer" />
-      <HomeCard title="Fridge" customCss={fridgeStyle} icon={faTint} linkTo="/view/fridge" />
-      {/* <HomeCard title="Pantry" customCss={pantryStyle} icon={faDoorClosed} linkTo="/view/pantry" /> */}
-      <Link to="/add">
-        <FAB icon={faShoppingCart} />
-      </Link>
-    </div>
+    <SearchView>
+      {q ? (
+        <SearchList />
+      ) : (
+        <div css={[container, { marginTop: '-1rem', padding: 0 }]}>
+          <HomeCard title="Freezer" customCss={freezerStyle} icon={faSnowflake} linkTo="/view/freezer" />
+          <HomeCard title="Fridge" customCss={fridgeStyle} icon={faTint} linkTo="/view/fridge" />
+          {/* <HomeCard title="Pantry" customCss={pantryStyle} icon={faDoorClosed} linkTo="/view/pantry" /> */}
+          <Link to="/add">
+            <FAB icon={faShoppingCart} />
+          </Link>
+        </div>
+      )}
+    </SearchView>
   );
 }
 

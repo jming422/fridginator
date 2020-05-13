@@ -49,16 +49,15 @@ function App() {
   return (
     <SearchContext.Provider value={[q, setQ]}>
       <ItemsListContext.Provider value={{ data, error, loading, refresh }}>
+        <BackButton />
         <Switch>
           <Route exact path="/">
             <Home />
           </Route>
           <Route path="/view">
-            <BackButton />
             <ViewSearch />
           </Route>
           <Route path="/add">
-            <BackButton />
             <AddSearch />
           </Route>
           <Route>

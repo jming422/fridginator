@@ -87,10 +87,11 @@ async function itemIdExists(id) {
 
 // Note: it's up to the route to validate `item` before passing it into this function!
 async function insertItem(item) {
-  const [keys, values] = _.unzip(Object.entries(item));
+  const keys = NONNULL_COLUMNS.concat(NULL_COLUMNS).filter((k) => k in item);
+  const values = keys.map((k) => item[k]);
 
   const q = `
-    INSERT INTO items (${keys.join()})
+    INSERT INTO items (${keys})
     VALUES (${keys.map((_k, i) => `$${i + 1}`).join()})
   `;
   await db.query(q, values);
@@ -98,7 +99,8 @@ async function insertItem(item) {
 
 // Note: it's up to the route to validate `updates` before passing it into this function!
 async function updateItem(id, updates) {
-  const [keys, values] = _.unzip(Object.entries(updates));
+  const keys = NONNULL_COLUMNS.concat(NULL_COLUMNS).filter((k) => k in updates);
+  const values = keys.map((k) => updates[k]);
 
   const q = `
     UPDATE items

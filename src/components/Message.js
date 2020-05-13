@@ -24,9 +24,9 @@ const colorByType = (type) => {
   }
 };
 
-function Message({ message, type = 'info' }) {
+function Message({ message, type = 'info', customCss }) {
   return (
-    <div css={[boxStyle, colorByType(type)]}>
+    <div css={[boxStyle, colorByType(type), customCss]}>
       {type === 'error' && 'Error: '}
       {`${message}`}
     </div>

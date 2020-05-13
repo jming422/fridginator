@@ -23,7 +23,7 @@ const searchContainer = css`
 const searchBarStyle = css`
   width: 75%;
   padding-bottom: 0.5rem;
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
   font-size: 2rem;
   display: flex;
   flex-direction: row;

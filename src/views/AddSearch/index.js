@@ -16,6 +16,7 @@ import Message from '../../components/Message';
 import SearchView from '../../components/SearchView';
 import AddItemList from '../../components/AddItemList';
 import { flexCenter } from '../../styles/positions';
+import ItemsListContext from '../../context/ItemsListContext';
 
 const addBtnStyle = (adding) => css`
   position: absolute;
@@ -39,19 +40,23 @@ const addBtnAnim = (adding) => css`
 
 function AddSearch() {
   const [q] = useContext(SearchContext);
+  const { refresh: refreshMainItemsList } = useContext(ItemsListContext);
+
   const [adding, setAdding] = useState(false);
   const [refreshItems, setRefreshItems] = useState(0);
-  const refresh = () => setRefreshItems((old) => old + 1);
+  const refreshAddPageList = () => setRefreshItems((old) => old + 1);
   const { error, loading, data } = useFetch('/items/list?filter=all', itemsOpts, [refreshItems]);
 
-  //  const { post: createItem } = useFetch('/items');
+  const { post: createItem } = useFetch('/items', { cachePolicy: 'no-cache' });
 
   const items = Array.isArray(data) ? data : [];
 
   const submitFn = async (newItem) => {
-    const { name, category, location, quantity } = newItem;
-    console.log(`add new item plz server: ${JSON.stringify(newItem)}`);
-    refresh();
+    newItem.added_timestamp = new Date().toISOString();
+    await createItem(newItem);
+    setAdding(false);
+    refreshMainItemsList();
+    refreshAddPageList();
   };
 
   const fuse = new Fuse(items, { keys: ['name', 'category', 'location'] });

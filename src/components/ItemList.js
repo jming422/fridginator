@@ -1,6 +1,8 @@
 /** @jsx jsx */
 
 import { jsx, css } from '@emotion/core';
+import _ from 'lodash';
+import useFetch from 'use-http';
 import Truncate from 'react-truncate';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -78,7 +80,10 @@ const pickerStyle = css`
 `;
 
 export function ItemListChildren({ items }) {
-  return items.map(({ name, quantity, location, category, duration }, i) => {
+  const { post: postItem } = useFetch('/items', { cachePolicy: 'no-cache' });
+  const throttledUpdate = _.throttle((id, updates) => postItem(`/${id}`, updates), 400);
+
+  return items.map(({ id, name, quantity, location, category, duration }, i) => {
     let status = 'normal';
     if (duration && duration.asWeeks() >= 2) status = 'red';
     else if (duration && duration.asWeeks() >= 1) status = 'orange';
@@ -98,13 +103,7 @@ export function ItemListChildren({ items }) {
         </div>
 
         <div css={pickerStyle}>
-          <QuantityPicker
-            initial={quantity}
-            onChange={(newVal) => {
-              console.log(`send to server ${newVal}`);
-              // refresh();
-            }}
-          />
+          <QuantityPicker initial={quantity} onChange={(newVal) => throttledUpdate(id, { quantity: newVal })} />
         </div>
       </li>
     );

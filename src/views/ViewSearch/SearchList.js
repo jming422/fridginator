@@ -10,8 +10,10 @@ import ItemsListContext from '../../context/ItemsListContext';
 import ItemList from '../../components/ItemList';
 
 function SearchList({ place, category }) {
-  const [items /*, refresh */] = useContext(ItemsListContext);
+  const { data } = useContext(ItemsListContext);
   const [q] = useContext(SearchContext);
+
+  const items = Array.isArray(data) ? data : [];
 
   const filteredItems = items.filter((t) => t.location === place && (!category || t.category === category));
   const fuse = new Fuse(filteredItems, { keys: ['name'] });

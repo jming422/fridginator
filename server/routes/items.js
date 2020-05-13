@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const moment = require('moment');
 
 const model = require('../models/items');
 const { locationIsValid } = require('../models/locations');
@@ -41,9 +42,16 @@ async function upsert(ctx) {
   } = ctx;
 
   // Validate body
-  const { valid, reason } = model.itemIsValid(body);
+  const { valid, reason } = model.itemIsValid(!id, body);
   if (!valid) {
     return ctx.badRequest(reason);
+  }
+
+  if ('added_timestamp' in body) {
+    body.added_timestamp = moment.utc(body.added_timestamp).toDate();
+  }
+  if ('expiry_timestamp' in body) {
+    body.expiry_timestamp = moment.utc(body.expiry_timestamp).toDate();
   }
 
   try {

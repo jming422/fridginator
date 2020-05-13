@@ -3,9 +3,11 @@
 import { jsx, css } from '@emotion/core';
 import React, { useState, useEffect } from 'react'; // eslint-disable-line
 import { BrowserRouter as Router, Switch, Route, Redirect, useHistory, useLocation } from 'react-router-dom';
-import { Provider } from 'use-http';
+import useFetch, { Provider } from 'use-http';
 
+import { itemsOpts } from './utils/fetchOpts';
 import SearchContext from './context/SearchContext';
+import ItemsListContext from './context/ItemsListContext';
 
 import BackButton from './components/BackButton';
 import Home from './views/Home';
@@ -40,24 +42,30 @@ function App() {
     return unlisten;
   }, [setQ, history]);
 
+  const [refreshItems, setRefreshItems] = useState(0);
+  const refresh = () => setRefreshItems((old) => old + 1);
+  const { error, loading, data } = useFetch(`/items/list/`, itemsOpts, [refreshItems]);
+
   return (
     <SearchContext.Provider value={[q, setQ]}>
-      <Switch>
-        <Route exact path="/">
-          <Home />
-        </Route>
-        <Route path="/view">
-          <BackButton />
-          <ViewSearch />
-        </Route>
-        <Route path="/add">
-          <BackButton />
-          <AddSearch />
-        </Route>
-        <Route>
-          <Redirect to="/" />
-        </Route>
-      </Switch>
+      <ItemsListContext.Provider value={{ data, error, loading, refresh }}>
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route path="/view">
+            <BackButton />
+            <ViewSearch />
+          </Route>
+          <Route path="/add">
+            <BackButton />
+            <AddSearch />
+          </Route>
+          <Route>
+            <Redirect to="/" />
+          </Route>
+        </Switch>
+      </ItemsListContext.Provider>
     </SearchContext.Provider>
   );
 }

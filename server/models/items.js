@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const moment = require('moment');
 
 const db = require('../db');
 const { locationIsValid } = require('./locations');
@@ -9,14 +10,17 @@ const NULL_COLUMNS = ['added_timestamp', 'expiry_timestamp', 'upc_code'];
 const COLUMNS = ['id'].concat(NONNULL_COLUMNS, NULL_COLUMNS);
 
 // TODO: Something better like JSON Schema or something
-function itemIsValid(item) {
+function itemIsValid(isCreate, item) {
   const requestKeys = Object.keys(item);
-  const missingRequiredKeys = _.difference(NONNULL_COLUMNS, requestKeys);
-  if (missingRequiredKeys.length > 0) {
-    return {
-      valid: false,
-      reason: `Missing required item keys: ${missingRequiredKeys.join(', ')}`,
-    };
+
+  if (isCreate) {
+    const missingRequiredKeys = _.difference(NONNULL_COLUMNS, requestKeys);
+    if (missingRequiredKeys.length > 0) {
+      return {
+        valid: false,
+        reason: `Missing required item keys: ${missingRequiredKeys.join(', ')}`,
+      };
+    }
   }
 
   const extraRequestKeys = _.difference(requestKeys, NONNULL_COLUMNS, NULL_COLUMNS);
@@ -27,17 +31,27 @@ function itemIsValid(item) {
     };
   }
 
-  if (!locationIsValid(item.location)) {
+  if ('location' in item && !locationIsValid(item.location)) {
     return {
       valid: false,
       reason: `Invalid location: ${item.location}`,
     };
   }
 
-  if (isNaN(item.quantity)) {
+  if ('quantity' in item && isNaN(item.quantity)) {
     return {
       valid: false,
       reason: `Invalid quantity: ${item.quantity}`,
+    };
+  }
+
+  if (
+    ('added_timestamp' in item && !moment(item.added_timestamp).isValid()) ||
+    ('expiry_timestamp' in item && !moment(item.expiry_timestamp).isValid())
+  ) {
+    return {
+      valid: false,
+      reason: 'Timestamps must be provided as an ISO 8601 or RFC 2822 Date time string',
     };
   }
 

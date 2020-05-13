@@ -51,11 +51,6 @@ function QuantityPicker({ initial, customState, onChange = () => {} }) {
 
   const [qty, setQty] = customState || builtinState;
 
-  // FIXME: This is hacky and I don't like it (but it works)
-  if ((initial || initial === 0) && qty !== initial) {
-    setQty(initial);
-  }
-
   return (
     <div css={pickerStyle}>
       <div

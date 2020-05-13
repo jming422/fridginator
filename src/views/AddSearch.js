@@ -51,13 +51,13 @@ function AddSearch() {
 
   const items = Array.isArray(data) ? data : [];
 
-  const submitFn = async (newItem) => {
+  const submitFn = _.throttle(async (newItem) => {
     newItem.added_timestamp = new Date().toISOString();
     await createItem(newItem);
-    setAdding(false);
     refreshMainItemsList();
     refreshAddPageList();
-  };
+    setAdding(false);
+  }, 500);
 
   const fuse = new Fuse(items, { keys: ['name', 'category', 'location'] });
 

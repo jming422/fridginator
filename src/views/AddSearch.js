@@ -5,6 +5,7 @@ import { jsx, css } from '@emotion/core';
 import React, { useState, useContext } from 'react'; // eslint-disable-line
 import Fuse from 'fuse.js';
 import useFetch from 'use-http';
+import _ from 'lodash';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';

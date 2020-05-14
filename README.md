@@ -1,6 +1,6 @@
-# Fridginator
+# Fridginator ![GitHub release (latest by date)](https://img.shields.io/github/v/release/jming422/fridginator)
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy) 
 
 Keep track of what's in your fridge (and how long it's been there)
 

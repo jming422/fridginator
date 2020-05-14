@@ -44,7 +44,7 @@ function App() {
 
   const [refreshItems, setRefreshItems] = useState(0);
   const refresh = () => setRefreshItems((old) => old + 1);
-  const { error, loading, data } = useFetch(`/items/list/`, itemsOpts, [refreshItems]);
+  const { error, loading, data } = useFetch('/items/list/', itemsOpts, [refreshItems]);
 
   return (
     <SearchContext.Provider value={[q, setQ]}>

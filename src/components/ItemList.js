@@ -83,7 +83,7 @@ export function ItemListChildren({ items }) {
   const { post: postItem } = useFetch('/items', { cachePolicy: 'no-cache' });
   const throttledUpdate = _.throttle((id, updates) => postItem(`/${id}`, updates), 400);
 
-  return items.map(({ id, name, quantity, location, category, duration }, i) => {
+  return items.map(({ id, name, quantity, location, category, duration }) => {
     let status = 'normal';
     if (duration && duration.asWeeks() >= 2) status = 'red';
     else if (duration && duration.asWeeks() >= 1) status = 'orange';
@@ -93,7 +93,7 @@ export function ItemListChildren({ items }) {
     else if (location === 'freezer') locationIcon = faSnowflake;
 
     return (
-      <li key={i} css={[listItemStyle(status), listItemContainer]}>
+      <li key={id} css={[listItemStyle(status), listItemContainer]}>
         <div css={itemNameStyle}>
           <Truncate lines={2}>{name}</Truncate>
         </div>

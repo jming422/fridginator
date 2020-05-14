@@ -73,7 +73,7 @@ async function getAllItems(location) {
     params.push(location);
   }
 
-  const { rows } = await db.query(q, params);
+  const { rows } = await db.query(`${q} ORDER BY id`, params);
   return rows.map(xformForFrontend);
 }
 
@@ -90,7 +90,7 @@ async function getAvailableItems(location) {
     params.push(location);
   }
 
-  const { rows } = await db.query(q, params);
+  const { rows } = await db.query(`${q} ORDER BY id`, params);
   return rows.map(xformForFrontend);
 }
 

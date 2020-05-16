@@ -20,9 +20,9 @@ const fabStyle = css`
   color: var(--white);
 `;
 
-function FAB({ icon = faPlus, onClick = () => {} }) {
+function FAB({ icon = faPlus, customCss, onClick = () => {} }) {
   return (
-    <div css={fabStyle} onClick={onClick}>
+    <div css={[fabStyle, customCss]} onClick={onClick}>
       <FontAwesomeIcon icon={icon} />
     </div>
   );

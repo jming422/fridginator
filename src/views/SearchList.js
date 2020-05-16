@@ -16,7 +16,7 @@ function SearchList({ place, category }) {
   const items = Array.isArray(data) ? data : [];
 
   const filteredItems = items.filter((t) => (!place || t.location === place) && (!category || t.category === category));
-  const fuse = new Fuse(filteredItems, { keys: ['name'] });
+  const fuse = new Fuse(filteredItems, { keys: ['name', 'category', 'location'] });
 
   const results = q ? fuse.search(q).map(({ item }) => item) : filteredItems;
 

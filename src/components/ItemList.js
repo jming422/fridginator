@@ -1,25 +1,22 @@
 /** @jsx jsx */
+/** @jsxFrag React.Fragment */
 
-import { jsx, css } from '@emotion/core';
-import _ from 'lodash';
+import { jsx, css, keyframes } from '@emotion/core';
+import React, { useState } from 'react'; // eslint-disable-line
 import useFetch from 'use-http';
 import Truncate from 'react-truncate';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTint } from '@fortawesome/free-solid-svg-icons';
+import { faTint, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faSnowflake } from '@fortawesome/free-regular-svg-icons';
 
+import FAB from './FloatingActionButton';
+import Message from './Message';
+import EditableListItem from './EditableListItem';
 import QuantityPicker from './QuantityPicker';
 
+import { listStyle, listItemStyle, itemNameStyle } from '../styles/list';
 import { idToName } from '../utils/categories';
-
-export const listStyle = css`
-  height: 100%;
-  width: 100%;
-  max-width: 70rem;
-  margin-top: -1rem;
-  padding: 0;
-`;
 
 const listItemContainer = css`
   display: flex;
@@ -27,36 +24,6 @@ const listItemContainer = css`
   justify-content: flex-end;
   align-items: center;
   text-align: left;
-`;
-
-export const listItemStyle = (status) => {
-  let borderColor;
-  switch (status) {
-    case 'red':
-      borderColor = '--red';
-      break;
-    case 'orange':
-      borderColor = '--orange';
-      break;
-    default:
-      borderColor = '--dark-blue';
-  }
-  return css`
-    margin: 2rem 0rem;
-    padding: 1rem;
-    background-color: var(--white);
-    color: var(--gray);
-    border: 0.25rem solid;
-    border-color: var(${borderColor});
-    border-radius: 1rem;
-    font-size: 1.8rem;
-  `;
-};
-
-export const itemNameStyle = css`
-  color: var(--black);
-  font-weight: bold;
-  flex-grow: 1;
 `;
 
 const categoryStyle = css`
@@ -79,44 +46,102 @@ const pickerStyle = css`
   margin-left: 1rem;
 `;
 
-export function ItemListChildren({ items, refreshFn }) {
-  const { post: postItem } = useFetch('/items', { cachePolicy: 'no-cache' });
-  const debouncedUpdate = _.debounce(async (id, updates) => {
-    await postItem(`/${id}`, updates);
-    refreshFn();
-  }, 500);
+const borderFlicker = keyframes`
+  from {
+    border-color: var(--dark-blue);
+  }
 
-  return items.map(({ id, name, quantity, location, category, duration }) => {
-    let status = 'normal';
-    if (duration && duration.asWeeks() >= 2) status = 'red';
-    else if (duration && duration.asWeeks() >= 1) status = 'orange';
+  to {
+    border-color: var(--light-blue);
+  }
+`;
 
-    let locationIcon;
-    if (location === 'fridge') locationIcon = faTint;
-    else if (location === 'freezer') locationIcon = faSnowflake;
+const chooseItemStyle = css`
+  cursor: pointer;
+  animation: ${borderFlicker} 0.7s ease-out infinite alternate;
+`;
 
-    return (
-      <li key={id} css={[listItemStyle(status), listItemContainer]}>
-        <div css={itemNameStyle}>
-          <Truncate lines={2}>{name}</Truncate>
-        </div>
-        <div css={categoryStyle}>
-          {locationIcon && <FontAwesomeIcon icon={locationIcon} css={iconStyle} />}
-          <Truncate>{idToName(category)}</Truncate>
-        </div>
+function NormalItem({ id, name, location, category, quantity, updateFn }) {
+  let locationIcon;
+  if (location === 'fridge') locationIcon = faTint;
+  else if (location === 'freezer') locationIcon = faSnowflake;
 
-        <div css={pickerStyle}>
-          <QuantityPicker initial={quantity} onChange={(newVal) => debouncedUpdate(id, { quantity: newVal })} />
-        </div>
-      </li>
-    );
-  });
+  return (
+    <>
+      <div css={itemNameStyle}>
+        <Truncate lines={2}>{name}</Truncate>
+      </div>
+      <div css={categoryStyle}>
+        {locationIcon && <FontAwesomeIcon icon={locationIcon} css={iconStyle} />}
+        <Truncate>{idToName(category)}</Truncate>
+      </div>
+      <div css={pickerStyle}>
+        <QuantityPicker initial={quantity} onChange={(newVal) => updateFn(id, { quantity: newVal })} />
+      </div>
+    </>
+  );
 }
 
-function ItemList({ items, refreshFn }) {
+export function ItemListChildren({ items, message, refreshFn }) {
+  const [choosingEdit, setChoosingEdit] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  function edit(id) {
+    console.log(`edit ${id}`);
+    setChoosingEdit(false);
+    setEditingId(id);
+  }
+
+  const { post: postItem } = useFetch('/items', { cachePolicy: 'no-cache' });
+  const update = (id) => async (updates) => {
+    await postItem(`/${id}`, updates);
+    refreshFn();
+    setEditingId(null);
+  };
+
+  function fabClick() {
+    setChoosingEdit((old) => !old);
+  }
+
+  return (
+    <>
+      {!editingId && (
+        <FAB
+          icon={choosingEdit ? faTimes : faPen}
+          customCss={choosingEdit && { fontSize: '2.4rem' }}
+          onClick={fabClick}
+        />
+      )}
+      {message}
+      {choosingEdit && (
+        <Message customCss={{ marginTop: '1rem', marginBottom: '2rem' }} message="Choose an item to edit:" />
+      )}
+      {items.map((item) => {
+        const { id, duration } = item;
+        let status = 'normal';
+        if (duration && duration.asWeeks() >= 2) status = 'red';
+        else if (duration && duration.asWeeks() >= 1) status = 'orange';
+
+        return editingId === id ? (
+          <EditableListItem initial={item} submitFn={update(id)} />
+        ) : (
+          <li
+            key={id}
+            css={[listItemStyle(status), listItemContainer, choosingEdit && chooseItemStyle]}
+            onClick={() => choosingEdit && edit(id)}
+          >
+            <NormalItem {...item} />
+          </li>
+        );
+      })}
+    </>
+  );
+}
+
+// Expects props: { items, message, refreshFn }
+function ItemList(props) {
   return (
     <ul css={listStyle}>
-      <ItemListChildren items={items} refreshFn={refreshFn} />
+      <ItemListChildren {...props} />
     </ul>
   );
 }

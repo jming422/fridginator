@@ -72,11 +72,10 @@ function AddItem({ initial, submitFn }) {
     setQuantity(1);
   }
 
-  function validateAndSubmit() {
+  async function validateAndSubmit() {
     if (isValid && name && category && location) {
-      const res = submitFn({ name, category, location, quantity });
-      if (res.then) res.then(resetState);
-      else resetState();
+      await submitFn({ name, category, location, quantity });
+      resetState();
     } else {
       setIsValid(false);
     }

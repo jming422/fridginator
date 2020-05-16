@@ -5,7 +5,6 @@ import { jsx, css } from '@emotion/core';
 import React, { useState, useContext } from 'react'; // eslint-disable-line
 import Fuse from 'fuse.js';
 import useFetch from 'use-http';
-import _ from 'lodash';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -52,12 +51,12 @@ function AddSearch() {
 
   const items = Array.isArray(data) ? data : [];
 
-  const submitFn = _.debounce(async (newItem) => {
+  async function submitFn(newItem) {
     newItem.added_timestamp = new Date().toISOString();
     await createItem(newItem);
     refreshMainItemsList();
     refreshAddPageList();
-  }, 500);
+  }
 
   const fuse = new Fuse(items, { keys: ['name', 'category', 'location'] });
 

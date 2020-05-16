@@ -12,6 +12,7 @@ import {
   faWineGlassAlt,
   faPizzaSlice,
   faEllipsisH,
+  faBirthdayCake,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const FRIDGE_CATEGORIES = [
@@ -23,6 +24,7 @@ export const FRIDGE_CATEGORIES = [
   { id: 'breads', name: 'Breads', icon: faBreadSlice },
   { id: 'drinks', name: 'Drinks', icon: faWineGlassAlt },
   { id: 'condiments', name: 'Condiments', icon: faWineBottle },
+  { id: 'desserts', name: 'Desserts', icon: faBirthdayCake },
   { id: 'misc', name: 'Misc.', icon: faEllipsisH },
 ];
 

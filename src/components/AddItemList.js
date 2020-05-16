@@ -146,7 +146,7 @@ function AddItem({ initial, submitFn }) {
   );
 }
 
-function AddItemList({ items, adding, submitFn, message }) {
+function AddItemList({ items, adding, submitFn, refreshFn, message }) {
   const [q] = useContext(SearchContext);
 
   return (
@@ -158,7 +158,7 @@ function AddItemList({ items, adding, submitFn, message }) {
         </>
       )}
       {message}
-      <ItemListChildren items={items} />
+      <ItemListChildren items={items} refreshFn={refreshFn} />
     </ul>
   );
 }

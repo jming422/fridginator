@@ -46,13 +46,13 @@ function AddSearch() {
   const [adding, setAdding] = useState(false);
   const [refreshItems, setRefreshItems] = useState(0);
   const refreshAddPageList = () => setRefreshItems((old) => old + 1);
-  const { error, loading, data } = useFetch('/items/list?filter=all', itemsOpts, [refreshItems]);
+  const { error, data } = useFetch('/items/list?filter=all', itemsOpts, [refreshItems]);
 
   const { post: createItem } = useFetch('/items', { cachePolicy: 'no-cache' });
 
   const items = Array.isArray(data) ? data : [];
 
-  const submitFn = _.throttle(async (newItem) => {
+  const submitFn = _.debounce(async (newItem) => {
     newItem.added_timestamp = new Date().toISOString();
     await createItem(newItem);
     refreshMainItemsList();
@@ -64,7 +64,6 @@ function AddSearch() {
   const results = q ? fuse.search(q).map(({ item }) => item) : items;
 
   const errMessage = <Message customCss={{ marginBottom: '2rem' }} type="error" message={data} />;
-  const loadMessage = <Message customCss={{ marginBottom: '2rem' }} message="Still loading list..." />;
 
   return (
     <>
@@ -76,7 +75,11 @@ function AddSearch() {
           items={results}
           adding={adding}
           submitFn={submitFn}
-          message={(error && errMessage) || (loading && loadMessage)}
+          refreshFn={() => {
+            refreshAddPageList();
+            refreshMainItemsList();
+          }}
+          message={error && errMessage}
         />
       </SearchView>
     </>

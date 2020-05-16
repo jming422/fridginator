@@ -79,9 +79,12 @@ const pickerStyle = css`
   margin-left: 1rem;
 `;
 
-export function ItemListChildren({ items }) {
+export function ItemListChildren({ items, refreshFn }) {
   const { post: postItem } = useFetch('/items', { cachePolicy: 'no-cache' });
-  const throttledUpdate = _.throttle((id, updates) => postItem(`/${id}`, updates), 400);
+  const debouncedUpdate = _.debounce(async (id, updates) => {
+    await postItem(`/${id}`, updates);
+    refreshFn();
+  }, 500);
 
   return items.map(({ id, name, quantity, location, category, duration }) => {
     let status = 'normal';
@@ -103,17 +106,17 @@ export function ItemListChildren({ items }) {
         </div>
 
         <div css={pickerStyle}>
-          <QuantityPicker initial={quantity} onChange={(newVal) => throttledUpdate(id, { quantity: newVal })} />
+          <QuantityPicker initial={quantity} onChange={(newVal) => debouncedUpdate(id, { quantity: newVal })} />
         </div>
       </li>
     );
   });
 }
 
-function ItemList({ items }) {
+function ItemList({ items, refreshFn }) {
   return (
     <ul css={listStyle}>
-      <ItemListChildren items={items} />
+      <ItemListChildren items={items} refreshFn={refreshFn} />
     </ul>
   );
 }

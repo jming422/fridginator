@@ -10,7 +10,7 @@ import ItemsListContext from '../context/ItemsListContext';
 import ItemList from '../components/ItemList';
 
 function SearchList({ place, category }) {
-  const { data } = useContext(ItemsListContext);
+  const { data, refresh } = useContext(ItemsListContext);
   const [q] = useContext(SearchContext);
 
   const items = Array.isArray(data) ? data : [];
@@ -20,7 +20,7 @@ function SearchList({ place, category }) {
 
   const results = q ? fuse.search(q).map(({ item }) => item) : filteredItems;
 
-  return <ItemList items={results} />;
+  return <ItemList items={results} refreshFn={refresh} />;
 }
 
 export default SearchList;

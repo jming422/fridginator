@@ -14,7 +14,7 @@ import Message from '../../components/Message';
 
 function ViewSearch() {
   const [q] = useContext(SearchContext);
-  const { error, loading, data } = useContext(ItemsListContext);
+  const { error, data } = useContext(ItemsListContext);
 
   const match = useRouteMatch('/view/:place');
   const place = match.params.place;
@@ -27,7 +27,6 @@ function ViewSearch() {
     <SearchView>
       <Switch>
         {error && <Message customCss={{ marginBottom: '2rem' }} type="error" message={data} />}
-        {loading && <Message customCss={{ marginBottom: '2rem' }} message="Still loading list..." />}
         <Route exact path={match.path}>
           {q ? <SearchList place={place} /> : <Categories />}
         </Route>

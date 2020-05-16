@@ -44,5 +44,8 @@ export function isFreezerCategory(catId) {
 }
 
 export function idToName(categoryId) {
-  return ALL_CATEGORIES.find(({ id }) => id === categoryId).name;
+  return _.chain(ALL_CATEGORIES)
+    .find(({ id }) => id === categoryId)
+    .get('name')
+    .value();
 }

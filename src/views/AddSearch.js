@@ -57,12 +57,14 @@ function AddSearch() {
     await createItem(newItem);
     refreshMainItemsList();
     refreshAddPageList();
-    setAdding(false);
   }, 500);
 
   const fuse = new Fuse(items, { keys: ['name', 'category', 'location'] });
 
   const results = q ? fuse.search(q).map(({ item }) => item) : items;
+
+  const errMessage = <Message customCss={{ marginBottom: '2rem' }} type="error" message={data} />;
+  const loadMessage = <Message customCss={{ marginBottom: '2rem' }} message="Still loading list..." />;
 
   return (
     <>
@@ -70,9 +72,12 @@ function AddSearch() {
         <FontAwesomeIcon icon={faPlus} css={addBtnAnim(adding)} />
       </div>
       <SearchView>
-        {error && <Message customCss={{ marginBottom: '2rem' }} type="error" message={data} />}
-        {loading && <Message customCss={{ marginBottom: '2rem' }} message="Still loading list..." />}
-        <AddItemList items={results} adding={adding} submitFn={submitFn} />
+        <AddItemList
+          items={results}
+          adding={adding}
+          submitFn={submitFn}
+          message={(error && errMessage) || (loading && loadMessage)}
+        />
       </SearchView>
     </>
   );

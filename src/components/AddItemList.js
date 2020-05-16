@@ -57,21 +57,43 @@ const addSaveStyle = css`
 `;
 
 function AddItem({ initial, submitFn }) {
+  const [isValid, setIsValid] = useState(true);
   const [name, setName] = useState(initial || '');
   const [category, setCategory] = useState('');
   const [location, setLocation] = useState('');
   const quantityState = useState(1);
-  const [quantity] = quantityState;
+  const [quantity, setQuantity] = quantityState;
+
+  function resetState() {
+    setIsValid(true);
+    setName('');
+    setCategory('');
+    setLocation('');
+    setQuantity(1);
+  }
+
+  function validateAndSubmit() {
+    if (isValid && name && category && location) {
+      const res = submitFn({ name, category, location, quantity });
+      if (res.then) res.then(resetState);
+      else resetState();
+    } else {
+      setIsValid(false);
+    }
+  }
 
   return (
-    <li css={[listItemStyle(), addItemContainer]}>
+    <li css={[listItemStyle(isValid || 'red'), addItemContainer]}>
       <div css={[addItemRow, { marginBottom: '1rem' }]}>
         <input
           type="text"
           css={addInputStyle}
           value={name}
           placeholder="Item name"
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => {
+            setName(e.target.value);
+            setIsValid(true);
+          }}
         />
         <QuantityPicker customState={quantityState} />
       </div>
@@ -85,6 +107,7 @@ function AddItem({ initial, submitFn }) {
             if (categoryShouldBeDisabled(category, newVal)) {
               setCategory('');
             }
+            setIsValid(true);
           }}
         >
           <option value="" disabled>
@@ -103,6 +126,7 @@ function AddItem({ initial, submitFn }) {
             setCategory(newVal);
             if (isFridge && !isFreezer) setLocation('fridge');
             else if (!isFridge && isFreezer) setLocation('freezer');
+            setIsValid(true);
           }}
         >
           <option value="" disabled>
@@ -114,7 +138,7 @@ function AddItem({ initial, submitFn }) {
             </option>
           ))}
         </select>
-        <div css={addSaveStyle} onClick={() => submitFn({ name, category, location, quantity })}>
+        <div css={addSaveStyle} onClick={validateAndSubmit}>
           Save
         </div>
       </div>
@@ -122,7 +146,7 @@ function AddItem({ initial, submitFn }) {
   );
 }
 
-function AddItemList({ items, adding, submitFn }) {
+function AddItemList({ items, adding, submitFn, message }) {
   const [q] = useContext(SearchContext);
 
   return (
@@ -133,6 +157,7 @@ function AddItemList({ items, adding, submitFn }) {
           <ListDivider />
         </>
       )}
+      {message}
       <ItemListChildren items={items} />
     </ul>
   );

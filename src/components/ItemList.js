@@ -7,7 +7,7 @@ import useFetch from 'use-http';
 import Truncate from 'react-truncate';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTint, faPen, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTint, faPen, faTimes, faDoorClosed } from '@fortawesome/free-solid-svg-icons';
 import { faSnowflake } from '@fortawesome/free-regular-svg-icons';
 
 import FAB from './FloatingActionButton';
@@ -65,6 +65,7 @@ function NormalItem({ name, location, category, quantity, updateFn, disablePicke
   let locationIcon;
   if (location === 'fridge') locationIcon = faTint;
   else if (location === 'freezer') locationIcon = faSnowflake;
+  else if (location === 'pantry') locationIcon = faDoorClosed;
 
   return (
     <>

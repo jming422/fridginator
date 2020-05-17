@@ -5,7 +5,7 @@ import { jsx, css } from '@emotion/core';
 import React, { useContext } from 'react'; // eslint-disable-line
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { /* faDoorClosed, */ faTint, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faDoorClosed, faTint, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { faSnowflake } from '@fortawesome/free-regular-svg-icons';
 
 import { flexCenter, container } from '../styles/positions';
@@ -37,10 +37,10 @@ const fridgeStyle = css`
   color: var(--white);
 `;
 
-// const pantryStyle = css`
-//   background-color: var(--dark-blue);
-//   color: var(--light-blue);
-// `;
+const pantryStyle = css`
+  background-color: var(--dark-blue);
+  color: var(--light-blue);
+`;
 
 function HomeCard({ title, customCss, icon, linkTo }) {
   return (
@@ -62,7 +62,7 @@ function Home() {
         <div css={[container, { marginTop: '-1rem', padding: 0 }]}>
           <HomeCard title="Freezer" customCss={freezerStyle} icon={faSnowflake} linkTo="/view/freezer" />
           <HomeCard title="Fridge" customCss={fridgeStyle} icon={faTint} linkTo="/view/fridge" />
-          {/* <HomeCard title="Pantry" customCss={pantryStyle} icon={faDoorClosed} linkTo="/view/pantry" /> */}
+          <HomeCard title="Pantry" customCss={pantryStyle} icon={faDoorClosed} linkTo="/view/pantry" />
           <Link to="/add">
             <FAB icon={faShoppingCart} />
           </Link>

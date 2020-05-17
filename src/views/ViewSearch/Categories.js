@@ -4,36 +4,38 @@ import { jsx, css } from '@emotion/core';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { flexCenter } from '../../styles/positions';
-
-import { FREEZER_CATEGORIES, FRIDGE_CATEGORIES } from '../../utils/categories';
+import { FREEZER_CATEGORIES, FRIDGE_CATEGORIES, PANTRY_CATEGORIES } from '../../utils/categories';
 
 const gridContainer = css`
-  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: center;
+  align-items: flex-start;
   flex-wrap: wrap;
   margin: -1rem 2rem 0rem 2rem;
   padding: 0;
 `;
 
 const cardStyle = css`
-  height: 18rem;
   width: 30rem;
+  height: 8rem;
   margin: 2rem;
+  padding: 0rem 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: left;
   border-radius: 1rem;
   background-color: var(--white);
   color: var(--blue);
-  font-size: 3rem;
-  ${flexCenter}
-  flex-direction: row;
+  font-size: 2.8rem;
 `;
 
 function Card({ icon, title, linkTo }) {
   return (
-    <Link to={linkTo} css={[cardStyle]}>
+    <Link to={linkTo} css={cardStyle}>
       <FontAwesomeIcon icon={icon} />
       <div css={{ marginLeft: '2rem' }}>{title}</div>
     </Link>
@@ -50,6 +52,9 @@ function Categories() {
       break;
     case 'freezer':
       categories = FREEZER_CATEGORIES;
+      break;
+    case 'pantry':
+      categories = PANTRY_CATEGORIES;
       break;
     default:
       categories = [];

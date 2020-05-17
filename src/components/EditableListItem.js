@@ -2,17 +2,25 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx, css } from '@emotion/core';
-import React, { useState, useEffect } from 'react'; // eslint-disable-line
+import React, { useState } from 'react'; // eslint-disable-line
 
 import { listItemStyle, itemNameStyle } from '../styles/list';
 import QuantityPicker from './QuantityPicker';
 
-import { ALL_CATEGORIES, isFridgeCategory, isFreezerCategory } from '../utils/categories';
+import {
+  ALL_CATEGORIES,
+  isFridgeCategory,
+  isFreezerCategory,
+  isPantryCategory,
+  getUniqueLocation,
+} from '../utils/categories';
 import { flexCenter } from '../styles/positions';
 
 function categoryShouldBeDisabled(category, location) {
   return (
-    (location === 'fridge' && !isFridgeCategory(category)) || (location === 'freezer' && !isFreezerCategory(category))
+    (location === 'fridge' && !isFridgeCategory(category)) ||
+    (location === 'freezer' && !isFreezerCategory(category)) ||
+    (location === 'pantry' && !isPantryCategory(category))
   );
 }
 
@@ -125,17 +133,18 @@ function EditableListItem({ initial, submitFn, resetAfterSubmit, customCss }) {
           </option>
           <option value="fridge">Fridge</option>
           <option value="freezer">Freezer</option>
+          <option value="pantry">Pantry</option>
         </select>
         <select
           css={addSelectStyle}
           value={category}
           onChange={(e) => {
             const newVal = e.target.value;
-            const isFridge = isFridgeCategory(newVal);
-            const isFreezer = isFreezerCategory(newVal);
             setCategory(newVal);
-            if (isFridge && !isFreezer) setLocation('fridge');
-            else if (!isFridge && isFreezer) setLocation('freezer');
+            const maybeUniqLoc = getUniqueLocation(newVal);
+            if (maybeUniqLoc) {
+              setLocation(maybeUniqLoc);
+            }
             setIsValid(true);
           }}
         >

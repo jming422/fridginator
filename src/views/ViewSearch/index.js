@@ -19,7 +19,7 @@ function ViewSearch() {
   const match = useRouteMatch('/view/:place');
   const place = match.params.place;
 
-  if (!['fridge', 'freezer'].includes(place)) {
+  if (!['fridge', 'freezer', 'pantry'].includes(place)) {
     return <Redirect to="/" />;
   }
 

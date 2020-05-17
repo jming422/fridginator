@@ -1,4 +1,4 @@
-const VALID_LOCATIONS = ['fridge', 'freezer'];
+const VALID_LOCATIONS = ['fridge', 'freezer', 'pantry'];
 
 function locationIsValid(loc) {
   return !loc || VALID_LOCATIONS.includes(loc);

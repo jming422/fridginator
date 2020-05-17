@@ -46,7 +46,7 @@ const inputStyle = css`
   font-size: 2rem;
 `;
 
-function QuantityPicker({ initial, customState, disabled = false, onChange = () => {} }) {
+function QuantityPicker({ initial, customState, disabled, onChange = () => {} }) {
   const builtinState = useState(initial);
 
   const [qty, setQty] = customState || builtinState;
@@ -59,7 +59,7 @@ function QuantityPicker({ initial, customState, disabled = false, onChange = () 
           if (disabled) return;
           setQty((oldVal) => {
             const newVal = oldVal - 1;
-            if (newVal <= 0) {
+            if (newVal < 0) {
               return 0;
             }
             onChange(newVal);
@@ -77,7 +77,10 @@ function QuantityPicker({ initial, customState, disabled = false, onChange = () 
           value={qty}
           onClick={(e) => e.target.select()}
           onChange={(e) => {
-            const newVal = e.target.value;
+            let newVal = e.target.value;
+            if (newVal < 0) {
+              newVal = 0;
+            }
             onChange(newVal);
             setQty(newVal);
           }}
@@ -89,7 +92,7 @@ function QuantityPicker({ initial, customState, disabled = false, onChange = () 
           if (disabled) return;
           setQty((oldVal) => {
             const newVal = oldVal + 1;
-            if (newVal <= 0) {
+            if (newVal < 0) {
               return 0;
             }
             onChange(newVal);

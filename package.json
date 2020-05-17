@@ -1,6 +1,6 @@
 {
   "name": "fridginator",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Keep track of what's in your fridge (and how long it's been there)",
   "author": "Jonathan Ming",
   "license": "GPL-3.0-or-later",

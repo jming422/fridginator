@@ -8,7 +8,7 @@ import SearchContext from '../../context/SearchContext';
 import ItemsListContext from '../../context/ItemsListContext';
 
 import Categories from './Categories';
-import SearchList from '../SearchList';
+import AddableItemList from '../../components/AddableItemList';
 import SearchView from '../../components/SearchView';
 import Message from '../../components/Message';
 
@@ -28,13 +28,13 @@ function ViewSearch() {
       <Switch>
         {error && <Message customCss={{ marginBottom: '2rem' }} type="error" message={data} />}
         <Route exact path={match.path}>
-          {q ? <SearchList place={place} /> : <Categories />}
+          {q ? <AddableItemList place={place} /> : <Categories />}
         </Route>
         <Route
           path={`${match.path}/:category`}
           render={(routeProps) => {
             const category = routeProps.match.params.category;
-            return <SearchList place={place} category={category} />;
+            return <AddableItemList place={place} category={category} />;
           }}
         />
       </Switch>

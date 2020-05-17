@@ -12,8 +12,8 @@ import { flexCenter, container } from '../styles/positions';
 import SearchContext from '../context/SearchContext';
 
 import FAB from '../components/FloatingActionButton';
+import AddableItemList from '../components/AddableItemList';
 import SearchView from '../components/SearchView';
-import SearchList from './SearchList';
 
 const homeCardStyle = css`
   height: 25vh;
@@ -57,7 +57,7 @@ function Home() {
   return (
     <SearchView>
       {q ? (
-        <SearchList />
+        <AddableItemList />
       ) : (
         <div css={[container, { marginTop: '-1rem', padding: 0 }]}>
           <HomeCard title="Freezer" customCss={freezerStyle} icon={faSnowflake} linkTo="/view/freezer" />

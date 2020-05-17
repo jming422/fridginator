@@ -61,7 +61,7 @@ const chooseItemStyle = css`
   animation: ${borderFlicker} 0.7s ease-out infinite alternate;
 `;
 
-function NormalItem({ id, name, location, category, quantity, updateFn }) {
+function NormalItem({ name, location, category, quantity, updateFn, disablePicker }) {
   let locationIcon;
   if (location === 'fridge') locationIcon = faTint;
   else if (location === 'freezer') locationIcon = faSnowflake;
@@ -76,7 +76,15 @@ function NormalItem({ id, name, location, category, quantity, updateFn }) {
         <Truncate>{idToName(category)}</Truncate>
       </div>
       <div css={pickerStyle}>
-        <QuantityPicker initial={quantity} onChange={(newVal) => updateFn(id, { quantity: newVal })} />
+        {/* Setting key=quantity ensures that when we receive an updated item
+         * quantity from the backend, the QuantityPicker's internal state will
+         * be correctly reset to the new quantity value. */}
+        <QuantityPicker
+          key={quantity}
+          initial={quantity}
+          disabled={disablePicker}
+          onChange={(newVal) => updateFn({ quantity: newVal })}
+        />
       </div>
     </>
   );
@@ -86,31 +94,31 @@ export function ItemListChildren({ items, message, refreshFn }) {
   const [choosingEdit, setChoosingEdit] = useState(false);
   const [editingId, setEditingId] = useState(null);
   function edit(id) {
-    console.log(`edit ${id}`);
     setChoosingEdit(false);
     setEditingId(id);
   }
 
   const { post: postItem } = useFetch('/items', { cachePolicy: 'no-cache' });
-  const update = (id) => async (updates) => {
+  const makeUpdateFn = (id) => async (updates) => {
     await postItem(`/${id}`, updates);
-    refreshFn();
     setEditingId(null);
+    refreshFn();
   };
 
   function fabClick() {
-    setChoosingEdit((old) => !old);
+    if (editingId) {
+      setEditingId(null);
+    } else {
+      setChoosingEdit((old) => !old);
+    }
   }
+
+  const fabCancel = choosingEdit || editingId;
 
   return (
     <>
-      {!editingId && (
-        <FAB
-          icon={choosingEdit ? faTimes : faPen}
-          customCss={choosingEdit && { fontSize: '2.4rem' }}
-          onClick={fabClick}
-        />
-      )}
+      <FAB icon={fabCancel ? faTimes : faPen} customCss={fabCancel && { fontSize: '2.4rem' }} onClick={fabClick} />
+
       {message}
       {choosingEdit && (
         <Message customCss={{ marginTop: '1rem', marginBottom: '2rem' }} message="Choose an item to edit:" />
@@ -120,16 +128,17 @@ export function ItemListChildren({ items, message, refreshFn }) {
         let status = 'normal';
         if (duration && duration.asWeeks() >= 2) status = 'red';
         else if (duration && duration.asWeeks() >= 1) status = 'orange';
+        const updateFn = makeUpdateFn(id);
 
         return editingId === id ? (
-          <EditableListItem initial={item} submitFn={update(id)} />
+          <EditableListItem key={id} initial={item} submitFn={updateFn} />
         ) : (
           <li
             key={id}
             css={[listItemStyle(status), listItemContainer, choosingEdit && chooseItemStyle]}
             onClick={() => choosingEdit && edit(id)}
           >
-            <NormalItem {...item} />
+            <NormalItem {...item} updateFn={updateFn} disablePicker={choosingEdit} />
           </li>
         );
       })}

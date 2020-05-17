@@ -18,7 +18,7 @@ function AddItemList({ items, adding, submitFn, refreshFn, message }) {
     <ul css={listStyle}>
       {adding && (
         <>
-          <EditableListItem initial={{ name: q }} submitFn={submitFn} />
+          <EditableListItem initial={{ name: q }} submitFn={submitFn} resetAfterSubmit />
           <ListDivider />
         </>
       )}

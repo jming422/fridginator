@@ -2,7 +2,7 @@
 /** @jsxFrag React.Fragment */
 
 import { jsx, css } from '@emotion/core';
-import React, { useState } from 'react'; // eslint-disable-line
+import React, { useState, useEffect } from 'react'; // eslint-disable-line
 
 import { listItemStyle, itemNameStyle } from '../styles/list';
 import QuantityPicker from './QuantityPicker';
@@ -53,7 +53,19 @@ const addSaveStyle = css`
   background-color: var(--blue);
 `;
 
-function EditableListItem({ initial, submitFn, customCss }) {
+/**
+ * An editible list item. Basically a glorified <li>, so put it in a <ul> or something.
+ * @param {Object} props
+ * @param {Object} [props.initial] - A map of initial values to prefill
+ * @param {string} [props.initial.name] - Item name to prefill
+ * @param {string} [props.initial.location] - Item location to prefill
+ * @param {string} [props.initial.category] - Item category to prefill
+ * @param {number} [props.initial.quantity] - Item quantity to prefill
+ * @param {function} props.submitFn - Called with the edited item when the user presses Save
+ * @param {boolean} [props.resetAfterSubmit] - Set this to `true` to have this component clear out all of its internal state after submitFn is finished. Note: do NOT use `resetAfterSubmit` if this component is unmounted by a side effect of submitFn!
+ * @param {string|Object} [props.customCss] - Style to append to this component's `css` prop
+ */
+function EditableListItem({ initial, submitFn, resetAfterSubmit, customCss }) {
   const [isValid, setIsValid] = useState(true);
   const [name, setName] = useState(initial.name || '');
   const [category, setCategory] = useState(initial.category, '');
@@ -72,7 +84,9 @@ function EditableListItem({ initial, submitFn, customCss }) {
   async function validateAndSubmit() {
     if (isValid && name && category && location) {
       await submitFn({ name, category, location, quantity });
-      resetState();
+      if (resetAfterSubmit) {
+        resetState();
+      }
     } else {
       setIsValid(false);
     }

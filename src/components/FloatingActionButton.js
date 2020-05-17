@@ -7,7 +7,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { flexCenter } from '../styles/positions';
 
 const fabStyle = css`
-  position: absolute;
+  position: fixed;
   right: 1rem;
   bottom: 3rem;
   height: 6rem;

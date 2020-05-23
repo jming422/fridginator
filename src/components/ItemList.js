@@ -103,6 +103,7 @@ export function ItemListChildren({ items, message, refreshFn }) {
   const makeUpdateFn = (id) => async (updates) => {
     await postItem(`/${id}`, updates);
     setEditingId(null);
+    setChoosingEdit(true);
     refreshFn();
   };
 

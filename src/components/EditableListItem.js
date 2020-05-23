@@ -83,10 +83,10 @@ function EditableListItem({ initial, submitFn, resetAfterSubmit, customCss }) {
 
   function resetState() {
     setIsValid(true);
-    setName('');
-    setCategory('');
-    setLocation('');
-    setQuantity(1);
+    setName(initial.name || '');
+    setCategory(initial.category || '');
+    setLocation(initial.location || '');
+    setQuantity(initial.quantity || 1);
   }
 
   async function validateAndSubmit() {

@@ -12,6 +12,7 @@ const fabStyle = css`
   bottom: 3rem;
   height: 6rem;
   width: 6rem;
+  border: 0.2rem solid var(--white);
   border-radius: 3rem;
   font-size: 2rem;
   ${flexCenter}

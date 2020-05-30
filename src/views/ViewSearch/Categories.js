@@ -1,10 +1,13 @@
 /** @jsx jsx */
 
-import { jsx, css } from '@emotion/core';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { css, jsx } from '@emotion/core';
+import { useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link, useRouteMatch } from 'react-router-dom';
+import _ from 'lodash';
 
 import { FREEZER_CATEGORIES, FRIDGE_CATEGORIES, PANTRY_CATEGORIES } from '../../utils/categories';
+import ItemsListContext from '../../context/ItemsListContext';
 
 const gridContainer = css`
   width: 100%;
@@ -45,6 +48,14 @@ function Card({ icon, title, linkTo }) {
 function Categories() {
   const match = useRouteMatch('/view/:place');
   const place = match.params.place;
+
+  const { data } = useContext(ItemsListContext);
+  const placeData = _(data)
+    .filter(({ location }) => location === place)
+    .map('category')
+    .uniq()
+    .value();
+
   let categories;
   switch (place) {
     case 'fridge':
@@ -60,10 +71,13 @@ function Categories() {
       categories = [];
   }
 
+  if (data) {
+    categories = categories.filter(({ id }) => placeData.includes(id));
+  }
   return (
     <div css={gridContainer}>
-      {categories.map((c, i) => (
-        <Card key={i} icon={c.icon} title={c.name} linkTo={`${match.url}/${c.id}`} />
+      {categories.map((c) => (
+        <Card key={c.id} icon={c.icon} title={c.name} linkTo={`${match.url}/${c.id}`} />
       ))}
     </div>
   );

@@ -73,7 +73,11 @@ function AddableItemList({ includeNonAvailable, place, category }) {
       <ul css={listStyle}>
         {adding && (
           <>
-            <EditableListItem initial={{ name: q, location: place, cat }} submitFn={submitFn} resetAfterSubmit />
+            <EditableListItem
+              initial={{ name: q, location: place, category: cat }}
+              submitFn={submitFn}
+              resetAfterSubmit
+            />
             <ListDivider />
           </>
         )}

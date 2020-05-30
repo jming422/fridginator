@@ -100,7 +100,11 @@ export function ItemListChildren({ items, message, refreshFn }) {
   }
 
   const { post: postItem } = useFetch('/items', { cachePolicy: 'no-cache' });
-  const makeUpdateFn = (id) => async (updates) => {
+  const qtyUpdateFn = (id) => async (updates) => {
+    await postItem(`/${id}`, updates);
+    refreshFn();
+  };
+  const makeEditFn = (id) => async (updates) => {
     await postItem(`/${id}`, updates);
     setEditingId(null);
     setChoosingEdit(true);
@@ -130,17 +134,17 @@ export function ItemListChildren({ items, message, refreshFn }) {
         let status = 'normal';
         if (duration && duration.asWeeks() >= 2) status = 'red';
         else if (duration && duration.asWeeks() >= 1) status = 'orange';
-        const updateFn = makeUpdateFn(id);
+        const editFn = makeEditFn(id);
 
         return editingId === id ? (
-          <EditableListItem key={id} initial={item} submitFn={updateFn} />
+          <EditableListItem key={id} initial={item} submitFn={editFn} />
         ) : (
           <li
             key={id}
             css={[listItemStyle(status), listItemContainer, choosingEdit && chooseItemStyle]}
             onClick={() => choosingEdit && edit(id)}
           >
-            <NormalItem {...item} updateFn={updateFn} disablePicker={choosingEdit} />
+            <NormalItem {...item} updateFn={qtyUpdateFn(id)} disablePicker={choosingEdit} />
           </li>
         );
       })}

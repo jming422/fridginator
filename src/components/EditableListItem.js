@@ -32,10 +32,21 @@ const addItemContainer = css`
 const addItemRow = css`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+  margin-bottom: 1rem;
 `;
 
+const spread = css`
+  justify-content: space-between;
+`;
+
+const left = css`
+  justify-content: flex-start;
+`;
+
+const right = css`
+  justify-content: flex-end;
+`;
 const addInputStyle = css`
   ${itemNameStyle}
   width: 18%;
@@ -48,6 +59,7 @@ const addInputStyle = css`
 
 const addSelectStyle = css`
   min-width: 10rem;
+  margin-right: 1rem;
 `;
 
 const addSaveStyle = css`
@@ -59,6 +71,12 @@ const addSaveStyle = css`
   cursor: pointer;
   color: var(--white);
   background-color: var(--blue);
+`;
+
+const addDeleteStyle = css`
+  ${addSaveStyle}
+  background-color: var(--red);
+  margin-right: 1rem;
 `;
 
 /**
@@ -73,7 +91,7 @@ const addSaveStyle = css`
  * @param {boolean} [props.resetAfterSubmit] - Set this to `true` to have this component clear out all of its internal state after submitFn is finished. Note: do NOT use `resetAfterSubmit` if this component is unmounted by a side effect of submitFn!
  * @param {string|Object} [props.customCss] - Style to append to this component's `css` prop
  */
-function EditableListItem({ initial, submitFn, resetAfterSubmit, customCss }) {
+function EditableListItem({ initial, submitFn, deleteFn, resetAfterSubmit, customCss }) {
   const [isValid, setIsValid] = useState(true);
   const [name, setName] = useState(initial.name || '');
   const [category, setCategory] = useState(initial.category, '');
@@ -102,7 +120,7 @@ function EditableListItem({ initial, submitFn, resetAfterSubmit, customCss }) {
 
   return (
     <li css={[listItemStyle(isValid || 'red'), addItemContainer, customCss]}>
-      <div css={[addItemRow, { marginBottom: '1rem' }]}>
+      <div css={[addItemRow, spread]}>
         <input
           type="text"
           css={addInputStyle}
@@ -115,7 +133,7 @@ function EditableListItem({ initial, submitFn, resetAfterSubmit, customCss }) {
         />
         <QuantityPicker customState={quantityState} />
       </div>
-      <div css={addItemRow}>
+      <div css={[addItemRow, left]}>
         <select
           css={addSelectStyle}
           value={location}
@@ -157,6 +175,13 @@ function EditableListItem({ initial, submitFn, resetAfterSubmit, customCss }) {
             </option>
           ))}
         </select>
+      </div>
+      <div css={[addItemRow, right]}>
+        {deleteFn && (
+          <div css={addDeleteStyle} onClick={deleteFn}>
+            Delete
+          </div>
+        )}
         <div css={addSaveStyle} onClick={validateAndSubmit}>
           Save
         </div>

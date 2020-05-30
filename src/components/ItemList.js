@@ -99,16 +99,26 @@ export function ItemListChildren({ items, message, refreshFn }) {
     setEditingId(id);
   }
 
-  const { post: postItem } = useFetch('/items', { cachePolicy: 'no-cache' });
+  const { post: postItem, delete: deleteItem } = useFetch('/items', { cachePolicy: 'no-cache' });
   const qtyUpdateFn = (id) => async (updates) => {
     await postItem(`/${id}`, updates);
     refreshFn();
   };
-  const makeEditFn = (id) => async (updates) => {
-    await postItem(`/${id}`, updates);
-    setEditingId(null);
-    setChoosingEdit(true);
-    refreshFn();
+  const makeEditFns = (id) => {
+    const updateState = () => {
+      setEditingId(null);
+      setChoosingEdit(true);
+      refreshFn();
+    };
+    const editFn = async (updates) => {
+      await postItem(`/${id}`, updates);
+      updateState();
+    };
+    const deleteFn = async () => {
+      await deleteItem(`/${id}`);
+      updateState();
+    };
+    return [editFn, deleteFn];
   };
 
   function fabClick() {
@@ -134,10 +144,10 @@ export function ItemListChildren({ items, message, refreshFn }) {
         let status = 'normal';
         if (duration && duration.asWeeks() >= 2) status = 'red';
         else if (duration && duration.asWeeks() >= 1) status = 'orange';
-        const editFn = makeEditFn(id);
+        const [editFn, deleteFn] = makeEditFns(id);
 
         return editingId === id ? (
-          <EditableListItem key={id} initial={item} submitFn={editFn} />
+          <EditableListItem key={id} initial={item} submitFn={editFn} deleteFn={deleteFn} />
         ) : (
           <li
             key={id}

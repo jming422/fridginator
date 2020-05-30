@@ -124,6 +124,11 @@ async function updateItem(id, updates) {
   await db.query(q, [id, ...values]);
 }
 
+async function deleteItem(id) {
+  const q = `DELETE FROM items WHERE id = $1`;
+  await db.query(q, [id]);
+}
+
 module.exports = {
   COLUMNS,
   NONNULL_COLUMNS,
@@ -134,4 +139,5 @@ module.exports = {
   itemIsValid,
   insertItem,
   updateItem,
+  deleteItem,
 };

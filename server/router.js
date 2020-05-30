@@ -9,7 +9,8 @@ const v1 = new Router();
 v1.get('/ping', (ctx) => ctx.noContent())
   .get('/lookup/:upc', (ctx) => ctx.notImplemented())
   .get('/items/list/:location?', items.list) // ?filter={available, all} (default: available)
-  .post('/items/:id?', items.upsert);
+  .post('/items/:id?', items.upsert)
+  .delete('/items/:id', items.deleteItem);
 
 router.use('/api/v1', v1.routes(), v1.allowedMethods());
 

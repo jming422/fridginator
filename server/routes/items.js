@@ -75,4 +75,24 @@ async function upsert(ctx) {
   }
 }
 
-module.exports = { list, upsert };
+// DELETE /items/:id
+async function deleteItem(ctx) {
+  const {
+    params: { id },
+  } = ctx;
+  try {
+    // Validate id
+    if (!(await model.itemIdExists(id))) {
+      return ctx.badRequest(`Cannot delete nonexistent item ID ${id}`);
+    }
+
+    // Delete the item
+    await model.deleteItem(id);
+    return ctx.noContent();
+  } catch (err) {
+    console.error(err);
+    return ctx.internalServerError();
+  }
+}
+
+module.exports = { list, upsert, deleteItem };

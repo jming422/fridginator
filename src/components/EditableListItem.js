@@ -151,8 +151,8 @@ function EditableListItem({ initial, submitFn, resetAfterSubmit, customCss }) {
           <option value="" disabled>
             Category...
           </option>
-          {ALL_CATEGORIES.map((cat, i) => (
-            <option key={i} value={cat.id} disabled={categoryShouldBeDisabled(cat.id, location) ? true : null}>
+          {ALL_CATEGORIES.filter(({ id }) => !categoryShouldBeDisabled(id, location)).map((cat) => (
+            <option key={cat.id} value={cat.id}>
               {cat.name}
             </option>
           ))}

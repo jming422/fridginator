@@ -74,7 +74,7 @@ export function getUniqueLocation(cat) {
   } else if (!isFridgeCategory(cat) && isFreezerCategory(cat) && !isPantryCategory(cat)) {
     return 'freezer';
   } else if (!isFridgeCategory(cat) && !isFreezerCategory(cat) && isPantryCategory(cat)) {
-    return 'category';
+    return 'pantry';
   } else {
     return null;
   }

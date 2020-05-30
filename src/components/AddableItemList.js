@@ -47,12 +47,10 @@ function AddableItemList({ includeNonAvailable, place, category }) {
   const [adding, setAdding] = useState(false);
   const { post: createItem } = useFetch('/items', { cachePolicy: 'no-cache' });
 
+  const cat = category === 'all' ? undefined : category;
   const items = Array.isArray(data) ? data : [];
   const filteredItems = items.filter(
-    (t) =>
-      (includeNonAvailable || t.quantity > 0) &&
-      (!place || t.location === place) &&
-      (!category || t.category === category)
+    (t) => (includeNonAvailable || t.quantity > 0) && (!place || t.location === place) && (!cat || t.category === cat)
   );
 
   async function submitFn(newItem) {
@@ -75,7 +73,7 @@ function AddableItemList({ includeNonAvailable, place, category }) {
       <ul css={listStyle}>
         {adding && (
           <>
-            <EditableListItem initial={{ name: q, location: place, category }} submitFn={submitFn} resetAfterSubmit />
+            <EditableListItem initial={{ name: q, location: place, cat }} submitFn={submitFn} resetAfterSubmit />
             <ListDivider />
           </>
         )}

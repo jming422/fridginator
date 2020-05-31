@@ -22,9 +22,8 @@ const searchContainer = css`
 `;
 
 const searchBarStyle = css`
-  height: 4rem;
-  min-width: 50%;
-  max-width: 80%;
+  height: 4.5rem;
+  width: 75%;
   position: absolute;
   top: 0;
   padding-bottom: 0.5rem;
@@ -40,12 +39,16 @@ const searchBarStyle = css`
 
 const searchInputStyle = css`
   margin-left: 0.5rem;
-  flex-grow: 1;
+  width: 100%;
   background: transparent;
   border: none;
   color: var(--dark-blue);
   font-size: 2rem;
   font-style: italic;
+`;
+
+const searchClearStyle = css`
+  font-size: 2.4rem;
 `;
 
 const throttledChangeFn = _.throttle((history, newValue) => {
@@ -59,9 +62,11 @@ function SearchView({ children }) {
   return (
     <div css={searchContainer}>
       <div css={searchBarStyle}>
-        <FontAwesomeIcon icon={faSearch} />
+        <div css={{ marginBottom: '0.2rem' }}>
+          <FontAwesomeIcon icon={faSearch} />
+        </div>
         <input
-          type="text"
+          type="search"
           css={searchInputStyle}
           value={q}
           onChange={(e) => {
@@ -70,6 +75,15 @@ function SearchView({ children }) {
             throttledChangeFn(history, newVal);
           }}
         />
+        <div
+          css={searchClearStyle}
+          onClick={() => {
+            setQ('');
+            throttledChangeFn(history, '');
+          }}
+        >
+          &times;
+        </div>
       </div>
       {children}
     </div>

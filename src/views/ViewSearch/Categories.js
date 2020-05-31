@@ -15,7 +15,7 @@ const gridContainer = css`
   justify-content: center;
   align-items: flex-start;
   flex-wrap: wrap;
-  margin: -1rem 2rem 0rem 2rem;
+  margin: 2rem 2rem 0rem 2rem;
   padding: 0;
 `;
 

@@ -13,24 +13,29 @@ import SearchContext from '../context/SearchContext';
 const searchContainer = css`
   height: 100%;
   width: 100%;
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding-top: 2rem;
+  padding-top: 4rem;
 `;
 
 const searchBarStyle = css`
-  width: 75%;
+  height: 4rem;
+  min-width: 50%;
+  max-width: 80%;
+  position: absolute;
+  top: 0;
   padding-bottom: 0.5rem;
-  margin-bottom: 2rem;
   font-size: 2rem;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  align-items: center;
+  align-items: flex-end;
   border-bottom: 0.1rem solid var(--blue);
   color: var(--blue);
+  z-index: 1;
 `;
 
 const searchInputStyle = css`

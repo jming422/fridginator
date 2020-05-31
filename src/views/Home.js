@@ -15,6 +15,11 @@ import FAB from '../components/FloatingActionButton';
 import AddableItemList from '../components/AddableItemList';
 import SearchView from '../components/SearchView';
 
+const homeContainer = css`
+  padding: 0;
+  margin-top: 1rem;
+`;
+
 const homeCardStyle = css`
   height: 25vh;
   width: 100%;
@@ -59,7 +64,7 @@ function Home() {
       {q ? (
         <AddableItemList />
       ) : (
-        <div css={[container, { marginTop: '-1rem', padding: 0 }]}>
+        <div css={[container, homeContainer]}>
           <HomeCard title="Freezer" customCss={freezerStyle} icon={faSnowflake} linkTo="/view/freezer" />
           <HomeCard title="Fridge" customCss={fridgeStyle} icon={faTint} linkTo="/view/fridge" />
           <HomeCard title="Pantry" customCss={pantryStyle} icon={faDoorClosed} linkTo="/view/pantry" />

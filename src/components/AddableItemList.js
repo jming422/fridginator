@@ -33,6 +33,7 @@ const addBtnStyle = (adding) => css`
   background-color: ${adding ? 'var(--white)' : 'var(--blue)'};
   color: ${adding ? 'var(--red)' : 'var(--white)'};
   transition: all 0.15s ease-out;
+  z-index: 4;
 `;
 
 const addBtnAnim = (adding) => css`

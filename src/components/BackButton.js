@@ -19,6 +19,7 @@ const btnStyle = css`
   ${flexCenter}
   cursor: pointer;
   color: var(--blue);
+  z-index: 5;
 `;
 
 function BackButton({ customCss, onClick }) {
